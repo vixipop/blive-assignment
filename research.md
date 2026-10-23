@@ -192,3 +192,7 @@ Before committing, record about 200 real utterances per language in the actual w
 5. Who does QC: a technician or a supervisor?
 
 *Gaps: Blive's uptime, hub count, deposit policy and parts pilferage data are not public. Many repair-industry stats are vendor claims.*
+
+## Design assumptions (to confirm with Blive)
+
+- **Ready-by date** = latest part arrival + 1 day. If no parts are needed, the scooter is ready the same day.

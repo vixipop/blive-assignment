@@ -1,0 +1,946 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Technician job card</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap">
+<style>
+/* Repertoire design system, case-study layout after the Alloca Launchpad page:
+   one 540px column, contents in the left margin, one 14px size, hierarchy from colour. */
+:root {
+  --font-sf: Inter, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --pink-400: #fb5ab2;
+  --accent: var(--pink-400);
+  --page: #fafafa;
+  --bg-surface: #fff;
+  --bg-icon: #f9f9f9;
+  --bg-icon-hover: #efefef;
+  --text: #000;
+  --text-strong: #000;
+  --text-body: #555;
+  --text-muted: #9f9f9f;
+  --border-soft: #e4e4e4;
+  --border-faint: #f5f5f5;
+  --selection-bg: #0000000d;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #0e0e0e;
+    --bg-surface: #111;
+    --bg-icon: #171717;
+    --bg-icon-hover: #1f1f1f;
+    --text: #b0b0b0;
+    --text-strong: #fff;
+    --text-body: #a3a3a3;
+    --text-muted: #6e6e6e;
+    --border-soft: #1c1c1c;
+    --border-faint: #141414;
+    --selection-bg: #ffffff14;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --page: #0e0e0e;
+  --bg-surface: #111;
+  --bg-icon: #171717;
+  --bg-icon-hover: #1f1f1f;
+  --text: #b0b0b0;
+  --text-strong: #fff;
+  --text-body: #a3a3a3;
+  --text-muted: #6e6e6e;
+  --border-soft: #1c1c1c;
+  --border-faint: #141414;
+  --selection-bg: #ffffff14;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  background: var(--page);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  max-width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+body {
+  font-family: var(--font-sf);
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+/* Headings look exactly like body text; colour carries the hierarchy */
+h1, h2, h3, p, ul, ol, figure, blockquote { margin: 0; font: inherit; }
+ul, ol { padding: 0; list-style: none; }
+button { font: inherit; color: inherit; }
+
+::selection { background: var(--selection-bg); color: inherit; text-shadow: none; }
+html.has-selection-highlight ::selection { color: inherit; background: transparent; }
+.selection-highlight-overlay { position: absolute; top: 0; left: 0; width: 0; height: 0; z-index: 2147483646; pointer-events: none; }
+.selection-highlight-rect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: var(--selection-bg);
+  border-radius: 5px;
+  transform: translate3d(var(--selection-x), var(--selection-y), 0);
+}
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+/* Column */
+.cs-page {
+  width: 540px;
+  max-width: calc(100% - 60px);
+  margin: 0 auto;
+  padding: 72px 0 111px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+}
+@media (max-width: 720px) {
+  .cs-page { width: calc(100% - 40px); max-width: 560px; padding: 48px 0 80px; }
+}
+
+/* Contents: a row above the text on narrow screens, a fixed column on the left on wide ones */
+.cs-index {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 16px;
+  width: 100%;
+  margin-bottom: 28px;
+  font-family: var(--font-sf);
+  font-size: 12px;
+  line-height: 18px;
+}
+.cs-index-list { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; padding: 0; list-style: none; }
+.cs-index-list a { color: var(--text-muted); text-decoration: none; transition: color .2s; position: relative; }
+.cs-index-list a:hover, .cs-index-list a:focus-visible { color: var(--text-strong); outline: none; }
+.cs-index-list a[aria-current="location"] { color: var(--text-strong); }
+.cs-index-list .link-label { line-height: 18px; }
+@media (min-width: 1100px) {
+  .cs-index {
+    position: fixed;
+    top: 72px;
+    left: 64px;
+    width: 200px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    margin: 0;
+    z-index: 5;
+  }
+  .cs-index-list { flex-direction: column; gap: 6px; }
+}
+
+/* Links: no underline at rest; a 1px rule wipes in from the left on hover, 2px on keyboard focus */
+.link-label { display: inline-block; line-height: 22px; position: relative; }
+.link-label::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: 0;
+  transition: transform .38s cubic-bezier(.22, 1, .36, 1);
+  pointer-events: none;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+a:hover .link-label::after, a:focus-visible .link-label::after { transform: scaleX(1); }
+a[href]:focus-visible .link-label::after { height: 2px; transform: scaleX(1); }
+.cs-link { position: relative; width: fit-content; color: inherit; text-decoration: none; transition: color .16s; }
+.cs-link:hover, .cs-link:focus-visible { outline: none; }
+/* Arrow on links that open in a new tab */
+.cs-link[target="_blank"]::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 4px;
+  left: calc(100% + 5px);
+  width: 11px;
+  height: 11px;
+  background-color: currentColor;
+  opacity: 0;
+  transform: translate(-3px, 3px);
+  transition: opacity .24s, transform .42s cubic-bezier(.22, 1, .36, 1);
+  will-change: opacity, transform;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 9 L9 3'/%3E%3Cpath d='M4.2 3 H9 V7.8'/%3E%3C/svg%3E") 50% / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 9 L9 3'/%3E%3Cpath d='M4.2 3 H9 V7.8'/%3E%3C/svg%3E") 50% / contain no-repeat;
+}
+.cs-link[target="_blank"]:hover::after, .cs-link[target="_blank"]:focus-visible::after { opacity: .8; transform: translate(0); }
+
+/* Article header */
+.cs-article { display: flex; flex-direction: column; gap: 40px; width: 100%; }
+.cs-header { display: flex; flex-direction: column; gap: 8px; }
+.cs-title { font-size: 14px; line-height: 22px; color: var(--text-strong); }
+.cs-meta { color: var(--text-muted); }
+.cs-summary { margin-top: 10px; font-size: 14px; line-height: 24px; color: var(--text); text-wrap: pretty; }
+.cs-divider { width: 100%; height: 0; position: relative; }
+.cs-divider::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; border-top: 1px solid var(--border-faint); }
+
+/* Sections */
+.cs-section { display: flex; flex-direction: column; gap: 14px; width: 100%; scroll-margin-top: 96px; }
+.cs-subhead { font-size: 16px; line-height: 24px; font-weight: 500; color: var(--text-strong); }
+.cs-prose { display: flex; flex-direction: column; gap: 16px; }
+.cs-prose > p, .cs-list li { font-size: 14px; line-height: 24px; color: var(--text); text-wrap: pretty; }
+.cs-list { display: flex; flex-direction: column; gap: 4px; }
+.cs-list li { position: relative; padding-left: 18px; }
+.cs-list li::before { content: "–"; position: absolute; left: 0; color: var(--text-muted); }
+.cs-prose > p + .cs-list { margin-top: -8px; }
+.cs-prose > p, .cs-list li, .cs-summary { color: var(--text-body); }
+.cs-strong { color: var(--text-strong); font-weight: 500; }
+.cs-label { color: var(--text-strong); }
+.cs-prose > p.cs-minihead { color: var(--text-strong); font-weight: 500; margin-top: 8px; }
+
+/* The quote sits on a sticky note */
+.cs-note {
+  margin: 12px 0 14px;
+  padding: 22px 22px 18px;
+  background: #ffe398;
+  color: #2b2410;
+  border-radius: 2px;
+  box-shadow: 0 1px 1px #00000020, 0 14px 22px -10px #00000066;
+  transform: rotate(-.7deg);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.cs-note p { font-size: 14px; line-height: 22px; color: #2b2410; text-wrap: pretty; }
+.cs-note footer { font-size: 12px; line-height: 18px; color: #6f5f2e; }
+
+/* Figures: frame, then a centred caption */
+.cs-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; width: 100%; margin-top: 14px; }
+@media (max-width: 480px) { .cs-pair { grid-template-columns: minmax(0, 1fr); } }
+.cs-figure { margin: 14px 0 0; display: flex; flex-direction: column; gap: 10px; min-width: 0; width: 100%; }
+.cs-pair .cs-figure { margin: 0; }
+/* Screens are exported with their own rounded corners, so the frame adds nothing around them */
+.cs-figure-frame { display: block; border-radius: 12px; overflow: hidden; }
+.cs-figure-frame img { display: block; width: 100%; height: auto; }
+.cs-figure-frame.is-plain { background: var(--bg-surface); }
+/* Flow diagram on a whiteboard: drag to move, zoom with buttons, pinch or ⌘/Ctrl + scroll */
+.flow-canvas { position: relative; width: 100%; height: 260px; border-radius: 12px; overflow: hidden; background: #FFFFFF;
+  border: 1px solid var(--border-soft); cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
+.flow-canvas.is-dragging { cursor: grabbing; }
+.flow-canvas.is-full { position: fixed; inset: 0; width: 100vw; height: 100dvh; border: 0; border-radius: 0; z-index: 60; }
+.flow-stage { position: absolute; inset: 0; }
+.flow-stage svg { display: block; width: 100%; height: 100%; }
+.flow-tools { position: absolute; right: 12px; bottom: 12px; display: flex; gap: 6px; }
+.flow-canvas.is-full .flow-tools { right: max(16px, calc(16px + env(safe-area-inset-right, 0px))); bottom: max(16px, calc(16px + env(safe-area-inset-bottom, 0px))); }
+.flow-tools button { height: 32px; min-width: 32px; padding: 0 12px; border: 0; border-radius: 999px; background: #F2F2F2; color: #000000;
+  font-size: 13px; line-height: 18px; cursor: pointer; box-shadow: 0 1px 2px #00000014; transition: background .16s; }
+.flow-tools button:hover { background: #E6E6E6; }
+.cs-figure figcaption { font-size: 12px; line-height: 18px; color: var(--text-muted); text-align: center; text-wrap: balance; }
+.cs-figure-open { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.cs-figure-open:focus-visible { outline-offset: -2px; }
+.cs-flow-slot { min-height: 280px; display: grid; place-items: center; padding: 0; font-size: 12px; line-height: 18px; color: var(--text-muted); }
+
+/* Lightbox */
+.cs-lightbox {
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 56px 24px 40px;
+  border: 0;
+  background: color-mix(in srgb, var(--page) 98%, transparent);
+  color: var(--text-muted);
+  overflow: auto;
+  cursor: zoom-out;
+}
+.cs-lightbox[open] { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.cs-lightbox::backdrop { background: transparent; }
+.cs-lightbox img { display: block; width: auto; max-width: min(100%, 1400px); height: auto; border-radius: 12px; }
+.cs-lightbox p { font-size: 12px; line-height: 18px; text-align: center; }
+.cs-lightbox-close {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--bg-icon);
+  color: var(--text-strong);
+  cursor: pointer;
+  transition: background .16s;
+}
+.cs-lightbox-close:hover { background: var(--bg-icon-hover); }
+body:has(.cs-lightbox[open]) { overflow: hidden; }
+
+/* Ending: one line, then footnotes */
+.cs-aside { margin-top: 40px; font-size: 14px; line-height: 24px; color: var(--text); }
+.cs-footnotes { position: relative; width: 100%; padding-top: 28px; }
+.cs-footnotes::before { content: ""; position: absolute; top: 0; left: 0; width: 96px; height: 1px; background: var(--border-soft); }
+.cs-footnotes ol { display: flex; flex-direction: column; gap: 8px; counter-reset: fn; }
+.cs-footnotes li { counter-increment: fn; position: relative; padding-left: 18px; font-size: 11px; line-height: 18px; color: var(--text-muted); }
+.cs-footnotes li::before { content: counter(fn) "."; position: absolute; left: 0; font-variant-numeric: tabular-nums; }
+.cs-footnotes .cs-link { display: inline-block; color: var(--text-strong); }
+.cs-footnotes .link-label { line-height: 18px; }
+.cs-footnotes .cs-link[target="_blank"]::after { top: 3px; }
+
+/* Theme toggle (top-right) */
+.theme-toggle-anchor {
+  position: fixed;
+  top: max(16px, calc(16px + env(safe-area-inset-top, 0px)));
+  right: max(16px, calc(16px + env(safe-area-inset-right, 0px)));
+  z-index: 51;
+  pointer-events: auto;
+}
+.theme-toggle-anchor .theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: none;
+  color: var(--text-muted);
+  opacity: .55;
+  cursor: pointer;
+  transition: opacity .28s cubic-bezier(.16, 1, .3, 1), color .24s cubic-bezier(.16, 1, .3, 1), background-color .32s cubic-bezier(.16, 1, .3, 1), transform .22s cubic-bezier(.22, 1, .36, 1);
+}
+.theme-toggle-anchor .theme-toggle:hover, .theme-toggle-anchor .theme-toggle:focus-visible { color: var(--text-strong); opacity: 1; outline: none; }
+.theme-toggle-anchor .theme-toggle:active { transform: scale(.92); transition: color 90ms, transform .14s cubic-bezier(.22, 1, .36, 1); }
+.theme-toggle-icon {
+  grid-area: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  will-change: transform, opacity;
+  transition: opacity .36s cubic-bezier(.16, 1, .3, 1), transform .64s cubic-bezier(.16, 1, .3, 1);
+}
+.theme-toggle-invert-1 { opacity: 1; transform: rotate(0); }
+.theme-toggle-invert-2 { opacity: 0; transform: rotate(-360deg); }
+:root[data-theme="dark"] .theme-toggle-invert-1 { opacity: 0; transform: rotate(360deg); }
+:root[data-theme="dark"] .theme-toggle-invert-2 { opacity: 1; transform: rotate(0); }
+@media (prefers-reduced-motion: reduce) { .theme-toggle-icon { transition: opacity .18s linear; transform: none !important; } }
+html.is-theme-switching, html.is-theme-switching *, html.is-theme-switching *::before, html.is-theme-switching *::after { transition-duration: 0s !important; transition-delay: 0s !important; }
+html.is-theme-switching .theme-toggle-icon { transition-duration: .36s, .64s !important; }
+
+/* Entrance */
+.appear { opacity: 0; transform: translateY(6px); animation: appear .5s cubic-bezier(.22, .61, .36, 1) forwards; animation-delay: var(--appear-delay, 0ms); }
+@keyframes appear { to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  .appear { opacity: 1; transform: none; animation: none; }
+  * { transition-duration: .001ms !important; }
+}
+</style>
+
+<div class="theme-toggle-anchor">
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle colour theme">
+    <span class="theme-toggle-icon theme-toggle-invert-1" aria-hidden="true">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.2M12 19.4v2.2M2.4 12h2.2M19.4 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M5.2 18.8l1.6-1.6M17.2 6.8l1.6-1.6"/></svg>
+    </span>
+    <span class="theme-toggle-icon theme-toggle-invert-2" aria-hidden="true">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.3A8.6 8.6 0 1 1 9.7 3.5a6.9 6.9 0 0 0 10.8 10.8Z"/></svg>
+    </span>
+  </button>
+</div>
+
+<div class="cs-page">
+  <nav class="cs-index appear" aria-label="Contents">
+    <ol class="cs-index-list">
+      <li><a href="#context" aria-current="location"><span class="link-label">Context</span></a></li>
+      <li><a href="#research"><span class="link-label">Research</span></a></li>
+      <li><a href="#assumptions"><span class="link-label">Assumptions and decisions</span></a></li>
+      <li><a href="#system"><span class="link-label">System</span></a></li>
+      <li><a href="#screens"><span class="link-label">Screens</span></a></li>
+    </ol>
+  </nav>
+
+  <article class="cs-article" id="top">
+    <header class="cs-header appear">
+      <h1 class="cs-title">Technician job card</h1>
+      <p class="cs-meta">Product design · Android app · 2 days</p>
+      <p class="cs-summary">An Android app so technicians stop writing down repairs and parts by hand. Technicians see their next job, managers see which jobs are stuck, and riders know when to pick up their scooter.</p>
+    </header>
+    <div class="cs-divider" aria-hidden="true"></div>
+
+    <section id="context" class="cs-section appear" aria-labelledby="context-title">
+      <h2 id="context-title" class="cs-subhead">Context</h2>
+      <div class="cs-prose">
+        <p>Blive rents electric scooters to delivery riders. <span class="cs-strong">Every hour in the workshop is an hour the rider can't earn.</span></p>
+        <p>Repairs are tracked on paper and WhatsApp photos.</p>
+        <p class="cs-minihead">Three problems I picked</p>
+        <ul class="cs-list">
+          <li>Waiting for parts is invisible, so it looks like slow work.</li>
+          <li>Costs are pieced together later, so nobody trusts the invoice.</li>
+          <li>Logging is extra work on a shared phone with greasy hands, so it gets skipped.</li>
+        </ul>
+      </div>
+      <figure class="cs-figure">
+        <button class="cs-figure-open" type="button" data-caption="Today's list, the urgent job, and the same job waiting on parts" aria-label="Enlarge: today's list, the urgent job, and the same job waiting on parts"><span class="cs-figure-frame is-plain"><img src="screens/hero.png" alt="Three screens side by side: the Today list with the urgent brake job on top, that job's details, and the same job waiting for parts" width="1144" height="800"></span></button>
+        <figcaption>Today's list, the urgent job, and the same job waiting on parts</figcaption>
+      </figure>
+    </section>
+
+    <section id="research" class="cs-section appear" aria-labelledby="research-title">
+      <h2 id="research-title" class="cs-subhead">Research</h2>
+      <div class="cs-prose">
+        <p>I did desk research on three user personas: the technician, the rider and the service manager.</p>
+      </div>
+      <figure class="cs-figure">
+        <button class="cs-figure-open" type="button" data-caption="Pain points for each persona" aria-label="Enlarge: pain points for each persona"><span class="cs-figure-frame is-plain"><img src="screens/personas.svg" alt="Pain points. Technician: logging everything in an app is a chore; gets blamed for slow work while waiting for parts; too much text and typing, and not in regional languages. Rider: no clarity on when to pick up the vehicle; frustration from no transparency. Service manager: can't see what's stuck and why; too many alerts add to fatigue; fishing through WhatsApp chats for updates; invoices go out late; doesn't know what to tell riders." width="1267" height="454"></span></button>
+        <figcaption>Pain points for each persona</figcaption>
+      </figure>
+      <div class="cs-prose">
+        <p>The cost is real: riders lose <span class="cs-strong">about ₹1,000 a day</span> off the road, and 48% can't afford a day off a week.</p>
+        <p class="cs-minihead">What each persona needs</p>
+        <ul class="cs-list">
+          <li><span class="cs-label">Rider → time.</span> Riders get a pickup date on WhatsApp. If a part runs late, they get a new date and the reason.</li>
+          <li><span class="cs-label">Manager → exceptions.</span> Managers see which jobs are stuck and why, with photos and parts behind every cost. They get alerts for delays and cancellations.</li>
+          <li><span class="cs-label">Technician → what's next.</span> Technicians see their next job, what the rider said, and which jobs are ready to start repair.</li>
+        </ul>
+        <p>The core job: <span class="cs-strong">know what's next, log it without typing, and flag when you're waiting on a part.</span></p>
+      </div>
+      <div class="cs-prose">
+        <p>Then I mapped the flow, from the job being created to the scooter being ready for pickup.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="flow-canvas" id="flow-canvas" role="img" aria-label="User flow: the manager creates a job, scheduled or unscheduled; general inspection with odometer and battery; damage or parts needed; if no, estimate the time; if yes, add damage photos, order parts and wait for them, while the rider is told the ETA plus repair time; then start job, finish, quality check; a pass marks the job done and tells the rider, a fail goes back to inspection">
+          <div class="flow-stage" id="flow-stage"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3484.0181708747114 751.1846184133136" width="3484.0181708747114" height="751.1846184133136"><!-- svg-source:excalidraw --><metadata></metadata><defs><style class="style-fonts">
+      @font-face { font-family: Excalifont; src: url(data:font/woff2;base64,d09GMgABAAAAABgYAA4AAAAAKmwAABfBAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGhwbin4cegZgAIEcEQgKvjCtbgtWAAE2AiQDgSgEIAWDGAcgG98go6KS1pzsrw7sYPh4kRChqqptPhU9JgwntPRjYyI8f2eIA3Dydy7tFkSIJZcTwghJZnmoX0Pf7l2AUUZloogcaKACKhSmrkKzNuSrKps/PH/q/7mO2SZpUikVAlXUAHUQ2q6DO3Z9HtSBf38A/k+nJbUz7Z8ZgSFgDoL3AJfIsheq5equvjJunVZsCtgcepcFBElj2ZpX++DK6IDAfTKzm8oKY6rUoxEtgP//01laL5300hmC3G8VKNOi7Q10qapR+39LksZmgel2DywfEI0kn28t1RMEHQmkEiGRhY0xcxPY+zsh2A0gqg2QPRkUEp8HwALQVpaFqXB1vnWt1HVVvrbJKC9ywSso/jAYMB5fsqzNqkxNED0W8wmvpr0EoB0A0gnRGkXlArJ+PK286aC7+7GpQHLb1VwLJI+by2qA5EVRaz2QQAHoIT2/b945SQRAquF6AnyBxCg9beBq0vcUqFuRfmwSoDwA2g/j+8L4ExRG0+tXlp6ymdkjHdBoD0Nwzj3DTjtoKe0L/kWBZeMPeAC//x0MsCh1l55sCirx1RB0OUMm9fs99TMp+iL2ocPkTjn2tf7GP8Fa5geOBxsEMDgaOgYWNg4ePgExCRl7Ckoqjpw4EwBwymwsJ1xbMlA9AkIhVFzLhBIxoxojhC+JB4bGCVUmkEZ3Gj4OOgH1ZhCCYDRyClDShxl7AErgYODNEfLWD5smM2kldmRAQ4A2jiqDE7YQZq6EL3cAUS4s2Wnxf4BcCGqz0H1GAZeWMf858cPV3ztBEATwgDI4MjFsLqxB2cnFgKKxpQBKaCj2wlsk7DEwWCBvmIiwe/G0oogEJfCEQ3tOqnDCjdXEXgjDFiIoRIGdCLR7ZmrMgyHljMwEnDzmGRd8fWtKismWu2fWeDBAoatqfwDYbBXt0wB8dsU/yiRPDw2oBP2TQw9b1DR5Emu7UQYVJ248hYqkZ2QWLUmqDl3ltwBzispDCCmi9oO6//bhN/7zz38cev6Zx8vR0lP2gMBNlCCZrcI5PK4DradA2x+hgoXhMgE6WYAFjSEkGPvzOAY0vVvLXdxO0aYdh8dz5oTz0vjRLUmB2gQtz1HoH8Zw6U9JN0pkAk3scSWj2M6V6dXjr1MC/x09ePLwwUJrQ7V8U53OnEbV3LEps/24Gv++jhBLI3mUc+WP2rMY5YAehiYvFrDrQDv2buQ7omd5ZIvxHmHJeEKUh8fiYthi3BaMbC5CT9TNep2F+zhgwxacoYpt61cg8YNQL9yMCIKSqevgbyKh1b7DyvYCcvFTFmBX6BuHZK9WmwZhwzAgQvAawexIM3cL+8SG2aOK8S9+Q/hWk6ylaJFat6lPN29qaSKPTtk2+7DAjkHixZUmPXo+ah/Eg2yQO0AVwXQuSI8tsooxTBUgW9eBSlpIPxHR03KZaX1T9cI+C7hpGI7c0m3dBlqrgNma9f8DMdwRPyhitNmWfGY6ha60Wq44fZFVpu71B7OZA/JddzFd0ZNi0TKpjZv/Je365E2tC7Rd2TgCP6WpBibeI5d6yZNkUG5L0dN/gMp4VzZpqAjqNrxYioD69PAh0EcAcTJxfDeaUL67v6+GdbpN9rAr9WnNhvmaJ3CsigzCehOL0cQXuOrYWXQZ77RlqTbrfekNPfJgd21LxiUIfr4SRGpt9Orc0asuLNAyK2SGOslt85GNDrQrtDsZSqj0WgA3Gx19CxwrMkGeLDC+IrwCK3DMKUGaEeX42OKqJzVxEtV2m5UM77Q/MH1zB+vcUUUem7T0BpXHUIO8u9B2hQIHBefJzna3yGUpjtFt9MDPpR4895aEi3y1vcoKjhuyAwR7L0YvXwLdpO/ekwchlYZJN9EP9UGc7fqbpMP+HLbv9HfVsC72akV1oQoSEzkrpVdEBZg/YxxUDEoWZI+kj2brvhB5kvuX6ANJviuC/PwjOAsScv893QTRCR95qxq9cPQixnjFCs0mxtkmlTeb6vA/Mm1DZMFKVHqfE9ZUO1Kk+RlRq8wu5Ov3AUGKSkBFHvQp5HbVNx0XTsOAhZtFRWg97RNcmn1SErV5NKp32gybzSTyAvNXaXZ0QjrkpRjcRD7AV4QiUqXN/HBLT5E11dIgI6br11FkU/4kq+wmRo2bBnQywhr75AxRTk/na9ku3STv/Dwmnx7u1sJ601ri49boamx96Z7UZ23t2PLhArpfGMMjT3LcLjy08XDph+K9TspJ07LPEzmCY6QTMlYMqJncd+Fm6TatzyeF6YtfbvK54l43HTtSBNAw6YTKbdh/HTUVh8SHMz95zF3BLO41yAhNAtVrIq305d6nx5/qZrnOLBdtku+ReLBvclpqyVNDzT6JgRAkbuRvtd3znoweYWSNUgvVV6cL/kejvYLcDwbn3p8pgiPfRMLcP1ge/bY4WMith7NfubmTWjPMRnN1FRdPVHvkG7jbSb03KBLNkOqUxEdeS/pxvcWGk8L07Dard9igJGw4xDg2RAnp0XwWGvTg5VyjU/rxxwPuxAhBQA8IYi1JqPiy0RvXnkje6imT5BYj4WfdOLJinzPL1XsW/H0liCx59irG3wwYBFT+zu9upQhIL0gVZBj5F7VZBNlYpzv2JIfR3uguRpcgcRIodTf92PFgt0gIxkUM3aLFpnwjUJbB8JdiWZZhYIFjVDD+QKMFxvR1f7AqG932uEit9zSvqfZBnC0DN0j4J67A32lmQyUIaKLaOZZN1VknpmILCi3ygF4ZPs2G1DWcL3GWM53/4Mghn++oVqoIb5NK/9rqMqBJECjSJ5fD1Wc+euniVZ7UB1YbY5y3gXS9Ac/SrH88VJGTBVnnVvO1SI+GyCdPGsX2yklUy2VRa+I7k4ArGi+mjO/LsTBgDajs1NwNccmjCz5kMaaNQQYszDxPiP1qVWYgba+IK3oWY5e8Hw3erW2Vq/FsrNXn6mmyTJ/TomqVxBI1aK6IWzM3xAQRkVN+aqdWlxVbVETPF3CgS6FV0bopNeT0EOg/ZE+KEr94lrNQETHsE5RjwVQE3d1l2u+z7YI2tw25MgNTFWKghvbgd38ncixFdrVwFaP/WzV0oJuN1wXkPCqua/ZobQGkQB24JJFdFXibZOdJN02T1hIGRV7n6vLH0YI8r/A1Rt7f++Bn33iCYyytLuJEI5vXf17KxUuX57Jr6XhS5DzivcI9CzJPZLL/INvY2Hw3jPasVGCcc+SVcn2KrQsX+YRarCcucnjE+N7FC9mbBx+u1oKBFYIW9fep73ZAWzCT2dFtHQjBY2U48RTVyvU0CRuC0Y6tMru/41u3mm8wJrVM84Cu1nHpJPtbo9hcbWT3b5yCl/rNRgPIJpf9dGVM7l64fLh0yMj/NbVu2UhCU4CblFLXLXX248WDPW87t5bZJ18Xb9pzR2VoBelND2C23Zd0MmPcTCrA+ie0cTXk92ew63w8RDcvQatFxTVLOcVhnahnPqbJhstFFT0Z1j7TWzilO7V3wmyMmwbGkUY/nfZ9N4bVaJJ1yMBoxQ+PU6SBSTfPx+tq8vtEjeg6t0l9JFd8P3a6hJk+sXatfpnZ6IURjTPu4cRQcxE7p3Qg1JRKGjQC6TqdbGwoH4SuqLlm0ao1W3VJS3DCjLW/y3p2n4oOouGYWsgZmeVvty+4qjP6i1pNtg45ONBd9EJcUqInondasDx6y0eQuZJPiptcnWIka4lSMy1+FNd2v7xLnhotWxajwdLrX/u6LZAHI2+SrM6Wothxv5UMJKQ+c5Is5ijYMUvPY2nCp9//s5mFO+i339xJNoP13uyvUII8liI7NXoKp48dQEnfOTKDI6uGBO68HdHBUcWF/TMtjRA6fR+YL+0QN3XPcP4nblB+lbLIdf0E9jjJt0wclih0gHJNM10mQDnl2DImYQyTzuWKikNvb1CxpDyZdI2Ymy7OLHcFlUO0BgUFYrXXCsrIvkY3GBHnenrUaKdcA5IwolyldWao0pApdApPt65pffIDOe0WEtDXN24Gjuc6aNKDYRoClyOz2PfesNdf/qj5x1qg+S1PlOIMayWnnXQQVF1mL98uF9reC3mfe4gHhWvXF5/Oul8+boGg0GneeROYqRm3uk4liIG6Sh47didQCwpOg5GkCUvFeS/GhbLoz0oIN8jcBTMm2/n2uMZK7bYwHfvJO8nQeOv1cToB8D6HYwEYzqVmrBZBkx4Xu5NSJ3CbNk4Ybvam837kLIvIP7Rc6/PBQJR9dtfCCgS4BLJKnqcv4IxmbwY9l1taqPb9NMrQHtXkocmqNnZGVMdOfrKJRndft6+bBUM4SWibsk9Fa6U7j7FYvtRgQX8dPny4wHQEL8VUdtobjEtE38TppjGa8RCNJ58mEHyfHd0NxFr6vuetUbQLMsriNGihaZpgGY9Ke4j7Hi4t3cLa6sBNvJSf8alt3YfVHmbjV14uNAFqaOzhHQFEFdPBDocguFiyjAFz5p+eqoGo0LbH3to4dhRGSuUuH9qEf8QbFYaWa/2l3p4gw/Or0njLO6txFTCCRVDYZOcLBw1pq/lVOQsM2XpZRYsCh9tZKPxQaf5SP9Zp9PkE+ISk0shmAehSv7kydWbeBTYl98XrT+bspfGJfvp6WTdAkvGFCJdhSesSdyaNixGBtTTe77RgIz47nMgiGUlEVlqB9gGmMzmS97OsF/hPt/Z3n9o9RbJWE7B4ydJ/sMjAwfU+mt4G1CLcaBT0/ywjKhrLXdyRfJmJ2UPpGTCe/rsiYDh5DHqtTZgg1SQ7HBxvQy8XNelg+0ScVdqGY/FIKvPyk4gRW+bNYV4oHMraMK4uCUxclMHzylW/0+nfpZWl2HmaWI2nnpRG+Jbo60Jn8RTT9BoK4UzCWDvhVLYZUhRBsWiJz/rVUsLV5rDCj83mQCwbbOB6DPxHbuJMctZQ0VYhD+vikqLAi1myzZ6+xpMnHgEEVXy4kMZw0WzpGWTqX3pWeuDK8kpSVGBVX6kmSyAO3p/qO8k5TWAbqa0qpG4u1uhTviBc96QzzznvEy+8s5Wzm4rUiGCx0x4vjuXTgmL/yj+Nq/c5DDrnh+Y/GWLYAdzVd8pWnXhbWlVGGTDlpASCXrFRWwbFY1x0yJOR651oYiVAY5rsfk9o8Zlh8m/FLktShLmEDiubjKxtZGGNFBt0Pxp1wy1KexK0jNW4rpG2icbFdA912DMiA/xHopCXr0dEY1VHWGfBKfyhXuQ4u/p6QhrfFXI1H3IvVc23MRMIdtXyoL9yc+YI44WqHNFsRgL6HWBuxVstp9V+2wR6J2NTqiGPfQ0aVWZDOgm/aFTbnbm3Ea2SAAq11OoS7UnOhVJG46lS/is6v/oWewlF9gZjTpUxZyGJ49RP7GzL7T0TVUGN05fE+vlkpbMGR5wfTGVbPzxb7a5OIJ+w3En7k50NcukDkqR3Jayb33BL/dwJggKnJ7pBZfmFSM3gAHLxY/DFRU/nv3X2OwIbQje+9/0eB/XVYM1+hKgzD2zm+AwN7/6KJ4UT5ISJI+Jp96OdIxAC6SJwb0FpPIeVD4cdfJMsXeIHEjW0GrV9nFpX5JUhk+qi7Z77E7y6V+L6eqY16vSg38bGfUrh5wz38EX8dbCVnFqmBU7pZ9Tl1RFJsaJ3JQNNSZGOaFIWIuBra+8MMbYUx07kjh+8aWzWqHgPpiQKkhJQg4vJIftZB9byUU+RwymPtHOa+Lw/fSvWgV7K/C9TJ7iM4HOM40ZsyeKPdbBnzQvZC9UIxEkzRH57W7qbE+GRmydu/8zBan16770uOqNemwK1e4f4N9PjSbaL56JGcT9fWhLhBt4TqZG/1lEobidhpCDZWCpxKw7w2rmWwOy6FTpxfJGQc8S04LMKAcMTyHH5HDQJnhPgEzo1xEbxz6z8HB9oBRjVm4p17Dcn/nxXY1GZQkOjtpcfZt9UKwy8AntS+ypkyxQ1kAatTLCvYnQoSlfccn8C3hKS42W3ZiHT+OSIS41fVCWddpUqnKYCCEr30nrDMRwkBxYwfrhwsSDD/MIeCPz+B5OMRd9HEkWW7MZkrUCgtPHsM9fIMl2hQI65Ccw9+eCrXEHZPKGIy05MXqSb5jvCoQsKZmewp4r+2gjocimRSGQSEvlTx7P/8usaLnmQVF4Q7OVSDXav1lvcfAoWJwrstan67QMi9WBdq4g1ATJyXc7ExftmxduSDgkYkzPpkCnA137fTKdPDC09l2Hbyfhyb7nW66pIkPA8G2yR3igxz9J7P95MY+MVCG75cqo18fRE8GIwvDA7Sn5q14UxZoZhGG53KipVuR6EYBIO5/lcdTcPTv2F1DhzSF2E3B+phSyUOd771RicgFdpchyg9TYwniscvAONFtEJCvW8BKb+494lkNnDYzHESqF70A8Ri6IgxKzYs4E+YhCMABsL1avh9yEC2vycAv+V3x9muhz8yAts4Yan3L++Z2H0ACkLyjghX+FI6ziV+vvfrRkeo+ASsk+KqZO9KmGVNvZlN3wrMoPaAvuAgFhtwUywF6aIOeUVHH2u426bUIWTlPpA/2SuZ3zTOtNR+yjqIjkWh5BZxjeK09VujEDI2HfFIb3BYVin3FA9r6bPzprGSUJOQpJnikpwC3WtOh71Ha2qdq3arXdeGhk9LXJQa9kVWTda9rGs0VsR45wuiAqyUPVrKyBVqqe7/dnD7NT5JpKTGxWi1L3pqwErmxsbh9OPsZ2slC0kUC6BknPJprFvhrhmOtHdZudt+0kb86o+QjWc7LcKJcNTlER1SOmCZQGLj4dJ+VE2S+puzSdqDHPNaMYIsLz4Scy+HFo2vQVJOBsv3Ac7Nx+BilI67bGkoBHs/8MTtHcyYgkuF6fCRAN5CtwfLI4gBT0Cf964n274CUlRNOw7bEEb3GBaVEA3mOvQzTDxsF4VTahV0aENa4WbZuVMKOBhZMlsG4+21Tp6OoWrmQGaBfRZwaGb7l8IZyBRiAA2Ab2Ze0UT5PtcvrFXR5X90e3f7rE6zpAm0ftbii9K8br/56pTMFiJvPXZa2q38ZMnY0lv+tu+X7s8+fPrvWlvMwMN+Q8IdpNyzBjAC7qQo7m4X0Md6cizpRtPXSfLe4tv3jMGczNpA0EVBysFGz2dkMZyjc9wr/7Cph1gfNFnC6tXmGdhBlES9kh+lfl5v0/cq59k7qgaZUXbeLsHLtxO0hWODIxLbFKMAcM0nAjRT38ytkyUDEeM7LJXbOyb4q/dOl8EmalpdNzzE1flM96KKDxhtSbEK/nfYufTZPnR6HJZtHPQ37sIBC3cwFB6uTkGoeF067sfnCxwh2CfPjQUlCdO3NMhlI8HKkgJ1IkfgS9iFNdMnXpw9fuHP1SijLWrJFdzLj9OwZf2KtCBWCZxL0jfaUo1580KvK3fzC5VGr31OAHOMRAF9ZLhfuWSyQ3aUGgljDvS2W4qdsY4op2dmicfbcEWuRozYvTN5Q8ckSijMgZ348jPepat9EnpC34ErUl7W6Sbt9va5BetMkRY/rnP75Amh1SCOy2KRRolLT94zs7wBRevW4KV4pIr0pxafRHFJhznzP48zoq7vUEKGe7W/0Ysu3ct40dwQgVqCpudMkokU8WNiGjyewWHaBpFPRG7fANDyBEOuSQUcOw2cZOUPP8W87wyFDLY0j8fqmX5bGff328h1B0Mv/ynPRNws3nNr0sT8ZS/QV97ud68e3s/SCAhLo/x8jXnVwEz7B8JI08Afn5wNQHAr2/PR/6e9DASfVYHA5rBCrG/+FMaOIXJ/x/MoMS7vVoVM8c8IDZoooXZMEs6sosVuMFhCBLQhyu3uIiaG4F8Q5in+WYwSgXAXJUFSh3HdOMfXygyj0uKSePtr/qs3DKQvw9YYSubk8/DfX65RFgyQHBm8k6xwJRyipV80p5zuoBSva6DDui5j0dy+Mbi8gsEWHUNbpKcf19Gbv6lcZENAdX1wAsXp44QnuOOMIYeR4SrKY4otWJHTAQ1cL5XwJ5OJYrUqlKuQb1WHpKVqdCmVpFm6So3aynZorWCD0/eJzmUta7u0qgS9CfRwjfhPIjv+IFcxL1QKMWamqSwikf/SspF/44wptyoq0BVi1dGBOcGXFL25R3wUxSXoxWqKG1XF+ngydBv1Ecq1HmLBmVJytDOKG2lIxBd+QUDAAAA); }</style></defs><rect x="0" y="0" width="3484.0181708747114" height="751.1846184133136" fill="#ffffff"></rect><g stroke-linecap="round" transform="translate(655.0165011703657 144.13838149135813) rotate(0 118.86893827849258 49.132494488443555)"><path d="M24.57 0 C79.38 1, 138.5 0.27, 213.17 0 C227.54 -2.77, 241.2 7.86, 237.74 24.57 C240.18 36.96, 236.34 48.32, 237.74 73.7 C235.72 93.64, 229.55 96.55, 213.17 98.26 C160.4 95.89, 104.84 95.53, 24.57 98.26 C10.5 95.67, -1.5 87.2, 0 73.7 C0.34 64.09, 3.61 49.04, 0 24.57 C-2.33 6.76, 8.85 1.19, 24.57 0" stroke="none" stroke-width="0" fill="#a5d8ff"></path><path d="M24.57 0 C71.02 1.48, 117.75 -1.29, 213.17 0 M24.57 0 C87.83 -0.15, 149.4 0.1, 213.17 0 M213.17 0 C228.01 1.47, 238.77 9.82, 237.74 24.57 M213.17 0 C227.69 -0.18, 235.92 9.86, 237.74 24.57 M237.74 24.57 C237.62 41.65, 236.37 55.43, 237.74 73.7 M237.74 24.57 C237.41 38.07, 237.82 50.5, 237.74 73.7 M237.74 73.7 C237.88 89.88, 227.74 99.37, 213.17 98.26 M237.74 73.7 C239.9 88.77, 230.89 98.53, 213.17 98.26 M213.17 98.26 C160.69 96.55, 108.99 99.48, 24.57 98.26 M213.17 98.26 C148.49 100.01, 84.52 99.28, 24.57 98.26 M24.57 98.26 C6.98 98.65, 0.02 88.13, 0 73.7 M24.57 98.26 C8.28 96.95, -0.27 88.93, 0 73.7 M0 73.7 C-0.3 59.91, 1.2 46.83, 0 24.57 M0 73.7 C1.18 62.04, -0.33 50.52, 0 24.57 M0 24.57 C0.11 10.17, 7.5 1.01, 24.57 0 M0 24.57 C1.35 10.32, 5.9 1.22, 24.57 0" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(695.0804121454721 179.33694199697743) rotate(0 87.72992706298828 12.5)"><text x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">scheduled service </text></g><g stroke-linecap="round" transform="translate(658.0165011703657 321.89457178943394) rotate(0 118.86893827849258 49.13249448844357)"><path d="M24.57 0 C79.28 -5.86, 126.59 -0.2, 213.17 0 C228.92 -0.95, 237.78 6.74, 237.74 24.57 C234.45 42.15, 237.64 63.52, 237.74 73.7 C234.77 89.94, 228.77 97.36, 213.17 98.26 C152.13 97.04, 87.9 98.54, 24.57 98.26 C11.04 101.76, 1.33 90.67, 0 73.7 C3.75 58.86, 0.01 39.73, 0 24.57 C-3.6 8.52, 9.61 1.49, 24.57 0" stroke="none" stroke-width="0" fill="#eebefa"></path><path d="M24.57 0 C90.91 -0.86, 156.73 -1.11, 213.17 0 M24.57 0 C82.27 -1.82, 140.8 -1.52, 213.17 0 M213.17 0 C231.07 -1.32, 236.98 9.57, 237.74 24.57 M213.17 0 C231.47 1.02, 239.01 8.6, 237.74 24.57 M237.74 24.57 C235.5 40.58, 238.58 54.2, 237.74 73.7 M237.74 24.57 C237.07 37.71, 238.34 50.13, 237.74 73.7 M237.74 73.7 C237.66 91.86, 229.14 97.88, 213.17 98.26 M237.74 73.7 C238.52 92.21, 228.74 100.51, 213.17 98.26 M213.17 98.26 C158.06 98.08, 105.61 98.79, 24.57 98.26 M213.17 98.26 C162.79 97.77, 111.68 96.74, 24.57 98.26 M24.57 98.26 C6.77 98.33, -1.14 88.71, 0 73.7 M24.57 98.26 C7.67 96.32, -0.22 89.61, 0 73.7 M0 73.7 C2 55.75, 1.04 39.37, 0 24.57 M0 73.7 C-0.88 60.95, -0.69 48.14, 0 24.57 M0 24.57 C0.09 7.72, 7.59 1.8, 24.57 0 M0 24.57 C0.14 7.31, 7.9 0.17, 24.57 0" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(684.6568387972611 358.5442147614623) rotate(0 98.46991729736328 12.5)"><text x="98.46991729736328" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="middle" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">unscheduled service </text></g><g stroke-linecap="round" transform="translate(10 219.28655062954294) rotate(0 133.33333333333348 79.09697960421136)"><path d="M32 0 C87.74 -0.26, 141.19 -1.6, 234.67 0 M32 0 C90.1 -1.9, 150.26 -2.11, 234.67 0 M234.67 0 C255.06 -1.61, 266.19 11.93, 266.67 32 M234.67 0 C255.26 2.08, 268.16 10.87, 266.67 32 M266.67 32 C267.63 56.65, 266.3 76.47, 266.67 126.19 M266.67 32 C266.85 69.88, 266.79 106.27, 266.67 126.19 M266.67 126.19 C267.42 147.24, 254.3 157.21, 234.67 158.19 M266.67 126.19 C266.49 148.93, 255.94 160.32, 234.67 158.19 M234.67 158.19 C163.9 156.85, 93.07 155.62, 32 158.19 M234.67 158.19 C193.36 157.24, 153.17 157.99, 32 158.19 M32 158.19 C11.28 160.01, 0.6 145.99, 0 126.19 M32 158.19 C10.52 156.98, -1.67 146.93, 0 126.19 M0 126.19 C0.71 100.33, -0.64 72.98, 0 32 M0 126.19 C-0.65 101.92, 0.62 77.19, 0 32 M0 32 C0.03 9.94, 10.91 1.16, 32 0 M0 32 C-1.93 10.63, 10.18 -0.1, 32 0" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(28.490857077890723 241.9259247544536) rotate(0 116.45033986206226 50)"><text x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">service manager speaks</text><text x="0" y="42.62" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">to rider ; creates job</text><text x="0" y="67.62" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">and assigns to</text><text x="0" y="92.62" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">technician</text></g><g transform="translate(643.7995907785617 431.2591451256658) rotate(0 132.67987060546875 37.5)"><text x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#f08c00" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">- always comes with rider</text><text x="0" y="42.62" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#f08c00" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">complaints</text><text x="0" y="67.62" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#f08c00" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">- parts most likely needed</text></g><g stroke-linecap="round" transform="translate(320.9794613840304 246.75914512566578) rotate(0 121.5 45)"><path d="M22.5 0 C89.76 3.16, 153.84 -0.39, 220.5 0 C237.26 3.59, 241.25 5.03, 243 22.5 C242 39.01, 244.99 47.36, 243 67.5 C244.96 84.71, 236.2 87.08, 220.5 90 C180.93 93.16, 137.37 91.75, 22.5 90 C9.91 90.78, -3.34 81.24, 0 67.5 C-2.81 51.2, -2.6 39.76, 0 22.5 C-0.51 7.4, 4.76 -3.31, 22.5 0" stroke="none" stroke-width="0" fill="#eebefa"></path><path d="M22.5 0 C67.54 1.87, 108.37 1.07, 220.5 0 M22.5 0 C67.64 1.91, 114.33 0.31, 220.5 0 M220.5 0 C234.91 1.65, 241.8 6.34, 243 22.5 M220.5 0 C237.49 -0.08, 242.67 7.16, 243 22.5 M243 22.5 C242.59 33.17, 241.44 46.84, 243 67.5 M243 22.5 C242.86 33.03, 242.52 45.73, 243 67.5 M243 67.5 C243.8 81.54, 236.23 89.9, 220.5 90 M243 67.5 C241.07 80.74, 235.12 91.25, 220.5 90 M220.5 90 C167.9 93.12, 116.82 90.39, 22.5 90 M220.5 90 C167.33 90.32, 115.68 90.04, 22.5 90 M22.5 90 C6.03 91.4, 0.48 83.11, 0 67.5 M22.5 90 C6.04 87.92, 1.38 83.4, 0 67.5 M0 67.5 C-0.71 60.21, 0.11 48.65, 0 22.5 M0 67.5 C0.28 50.9, 0.71 34.02, 0 22.5 M0 22.5 C1.79 6.26, 7.23 -0.4, 22.5 0 M0 22.5 C1.02 5.88, 5.49 -0.69, 22.5 0" stroke="#f08c00" stroke-width="2" fill="none"></path></g><g transform="translate(410.9794613840304 279.7591451256658) rotate(0 22.66998291015625 12.5)"><text x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Jobs</text></g><g stroke-linecap="round"><g transform="translate(569.9794613840304 291.7681451256658) rotate(0 41.01851989316765 39.853604453769975)"><path d="M0 0 C10.08 1.87, 18.48 0.46, 23.5 0 M0 0 C9.86 1.02, 18.37 -0.26, 23.5 0 M23.5 0 C35.65 -0.55, 37.77 3.94, 39.5 16 M23.5 0 C35.07 0.71, 40.52 4.18, 39.5 16 M39.5 16 C41.75 28.22, 39.76 41.48, 39.5 63.27 M39.5 16 C39.53 30.65, 38.86 42.96, 39.5 63.27 M39.5 63.27 C38 72.44, 45.85 79.92, 55.5 79.27 M39.5 63.27 C39.23 75.96, 44.73 81.5, 55.5 79.27 M55.5 79.27 C65.26 79.69, 76.39 77.63, 82.04 79.27 M55.5 79.27 C65.91 79.62, 75.43 79.88, 82.04 79.27" stroke="#f08c00" stroke-width="2" fill="none"></path></g><g transform="translate(569.9794613840304 291.7681451256658) rotate(0 41.01851989316765 39.853604453769975)"><path d="M62.44 87.53 C71.06 86.35, 78.02 81.92, 82.04 79.27 M62.44 87.53 C70.85 85.35, 77.87 80.91, 82.04 79.27" stroke="#f08c00" stroke-width="2" fill="none"></path></g><g transform="translate(569.9794613840304 291.7681451256658) rotate(0 41.01851989316765 39.853604453769975)"><path d="M61.71 73 C70.66 77.15, 77.89 78.04, 82.04 79.27 M61.71 73 C70.31 76.4, 77.61 77.52, 82.04 79.27" stroke="#f08c00" stroke-width="2" fill="none"></path></g></g><mask></mask><g stroke-linecap="round"><g transform="translate(569.9794613840304 291.7681451256658) rotate(0 39.51851989316765 -49.14433916002512)"><path d="M0 0 C6.53 -2.02, 14.12 1.73, 23.52 0 M0 0 C9 -0.2, 17.91 0.55, 23.52 0 M23.52 0 C35.65 -1.83, 37.71 -4.44, 39.52 -16 M23.52 0 C32.67 1.31, 39.86 -5.26, 39.52 -16 M39.52 -16 C37.32 -39.46, 38.8 -64.64, 39.04 -82.49 M39.52 -16 C39.1 -33.2, 38.05 -50.63, 39.04 -82.49 M39.04 -82.49 C38.88 -93.83, 42.69 -99.74, 55.04 -98.49 M39.04 -82.49 C41.22 -91.59, 42.64 -96.62, 55.04 -98.49 M55.04 -98.49 C62.77 -96.56, 66.09 -97.09, 79.04 -98.49 M55.04 -98.49 C62.32 -99.22, 69.55 -98.21, 79.04 -98.49" stroke="#f08c00" stroke-width="2" fill="none"></path></g><g transform="translate(569.9794613840304 291.7681451256658) rotate(0 39.51851989316765 -49.14433916002512)"><path d="M60.23 -91.68 C65.53 -95.51, 71.84 -93.61, 79.04 -98.49 M60.23 -91.68 C67.48 -94.35, 74.64 -96.12, 79.04 -98.49" stroke="#f08c00" stroke-width="2" fill="none"></path></g><g transform="translate(569.9794613840304 291.7681451256658) rotate(0 39.51851989316765 -49.14433916002512)"><path d="M60.26 -105.37 C65.44 -105.47, 71.75 -99.85, 79.04 -98.49 M60.26 -105.37 C67.52 -102.97, 74.67 -99.69, 79.04 -98.49" stroke="#f08c00" stroke-width="2" fill="none"></path></g></g><mask></mask><g transform="translate(663.5091204584414 27.725421007635646) rotate(0 132.81080240698338 50)"><text x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">- pre-scheduled and visible</text><text x="0" y="42.62" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">in "today's jobs"</text><text x="0" y="67.62" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">- most likely short general</text><text x="0" y="92.62" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">checkups with minor faults</text></g><g stroke-linecap="round" transform="translate(1246.9908709077158 222.92424322325724) rotate(0 98.10485091513578 55.70777966537861)"><path d="M27.85 0 C77.55 -0.91, 128.48 -3.54, 168.36 0 C189.44 -1.83, 193.67 7.09, 196.21 27.85 C198.68 40.13, 196.57 51.9, 196.21 83.56 C198.64 101.25, 185.28 114.71, 168.36 111.42 C142.59 113.4, 114.11 113.8, 27.85 111.42 C6.82 113.67, -3.15 99.31, 0 83.56 C2.74 71.18, 1.88 51.07, 0 27.85 C0.85 11.24, 9.37 2.65, 27.85 0" stroke="none" stroke-width="0" fill="#eebefa"></path><path d="M27.85 0 C69.67 -0.43, 111.1 1.76, 168.36 0 M27.85 0 C82.62 -0.08, 138.92 0.47, 168.36 0 M168.36 0 C187.65 1.6, 195.57 9.62, 196.21 27.85 M168.36 0 C188.76 -2, 196.81 10.39, 196.21 27.85 M196.21 27.85 C198.08 47.59, 194.37 66.58, 196.21 83.56 M196.21 27.85 C196.04 47.21, 196.64 67.34, 196.21 83.56 M196.21 83.56 C195.48 103.38, 187.51 110.54, 168.36 111.42 M196.21 83.56 C198.3 102.08, 187.37 110.37, 168.36 111.42 M168.36 111.42 C130.02 111.81, 90.5 111.03, 27.85 111.42 M168.36 111.42 C132.44 112.11, 94.53 112.1, 27.85 111.42 M27.85 111.42 C8.42 113.01, 1 100.41, 0 83.56 M27.85 111.42 C7.97 112.86, 1.99 102.64, 0 83.56 M0 83.56 C0.29 74.03, -1.45 59.58, 0 27.85 M0 83.56 C1.28 63.27, 0.36 41.16, 0 27.85 M0 27.85 C0.64 9.95, 10.45 0.68, 27.85 0 M0 27.85 C1.51 7.19, 10.32 -1.85, 27.85 0" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(1281.500114948216 248.87740086838573) rotate(0 68.63994598388672 25)"><text x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">damage?</text><text x="0" y="42.62" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">parts needed?</text></g><g stroke-linecap="round" transform="translate(1537.8544992490733 142.07401432837185) rotate(0 91.2030021070359 41.41109284860004)"><path d="M20.71 0 C61.78 1.28, 110.68 -1.93, 161.7 0 C175.33 1.65, 185.37 10.25, 182.41 20.71 C183.06 38.85, 182.48 53.42, 182.41 62.12 C183.04 76.66, 177.2 81.34, 161.7 82.82 C128.76 82.16, 97.05 86.14, 20.71 82.82 C3.49 85.45, -0.39 77.71, 0 62.12 C-3.41 48.43, -2.15 43.35, 0 20.71 C3.08 4.53, 3.71 -1.8, 20.71 0" stroke="none" stroke-width="0" fill="#eebefa"></path><path d="M20.71 0 C73.33 1.13, 123.46 0, 161.7 0 M20.71 0 C66.95 -1.76, 112.41 -0.89, 161.7 0 M161.7 0 C175.42 1.73, 182.6 8.28, 182.41 20.71 M161.7 0 C177.77 -1.14, 182.54 7.46, 182.41 20.71 M182.41 20.71 C183.3 37.29, 180.45 54.27, 182.41 62.12 M182.41 20.71 C183.05 37.41, 181.98 52.26, 182.41 62.12 M182.41 62.12 C184.19 75.71, 175.25 82.76, 161.7 82.82 M182.41 62.12 C184.38 75.11, 175.07 81.18, 161.7 82.82 M161.7 82.82 C119.53 85.27, 79.96 83.9, 20.71 82.82 M161.7 82.82 C110.42 84.12, 57.07 82.81, 20.71 82.82 M20.71 82.82 C7.81 81.16, 1.46 76.4, 0 62.12 M20.71 82.82 C6.76 80.93, 2.2 74.46, 0 62.12 M0 62.12 C-1.77 47.23, -1.45 27.21, 0 20.71 M0 62.12 C0.99 52.45, 0.23 44.09, 0 20.71 M0 20.71 C-0.62 5.14, 8.44 -1.35, 20.71 0 M0 20.71 C-1.1 4.97, 7.11 1.56, 20.71 0" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(1567.4338512837876 156.1954311596147) rotate(0 70.14388149762817 25)"><text x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">estimated</text><text x="0" y="42.62" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">time required?</text></g><g stroke-linecap="round" transform="translate(1538.8404776502302 325.46599694360066) rotate(0 124.02115702290371 29.73844317688662)"><path d="M14.87 0 C84.46 -4.25, 160.73 -3.09, 233.17 0 C244.43 -0.02, 244.77 5.54, 248.04 14.87 C248.11 26.82, 251.35 36.24, 248.04 44.61 C251.61 50.98, 241.24 59.58, 233.17 59.48 C171.08 56.17, 105.48 55.91, 14.87 59.48 C7.35 60.11, -2.76 55.38, 0 44.61 C-3.06 38.4, 0.38 28.2, 0 14.87 C-3.41 1.5, 7.1 -2.43, 14.87 0" stroke="none" stroke-width="0" fill="#eebefa"></path><path d="M14.87 0 C99.42 -1.57, 182.93 -1.87, 233.17 0 M14.87 0 C73.64 -1.12, 132.33 -1.71, 233.17 0 M233.17 0 C241.15 -1.31, 249.83 3.12, 248.04 14.87 M233.17 0 C241.37 1.27, 248.04 5.82, 248.04 14.87 M248.04 14.87 C247.92 24.62, 246.94 36.92, 248.04 44.61 M248.04 14.87 C248.66 23.22, 248.11 32.71, 248.04 44.61 M248.04 44.61 C248.47 54.53, 241.94 59.1, 233.17 59.48 M248.04 44.61 C246.98 54.97, 243.59 59.33, 233.17 59.48 M233.17 59.48 C164.8 61.31, 97.56 60.23, 14.87 59.48 M233.17 59.48 C186.62 56.94, 141.45 58.36, 14.87 59.48 M14.87 59.48 C3.06 57.78, -1.1 53.56, 0 44.61 M14.87 59.48 C6.3 57.64, 0.61 56.27, 0 44.61 M0 44.61 C-2.08 35.07, -0.09 25.61, 0 14.87 M0 44.61 C-0.46 33.42, 0.13 22.98, 0 14.87 M0 14.87 C0.12 5.21, 4.54 -0.63, 14.87 0 M0 14.87 C-0.82 2.77, 4.85 0.45, 14.87 0" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(1556.588088871059 341.5593705771578) rotate(0 107.75093078613281 12.25350552186535)"><text x="0" y="17.2725413836214" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="19.60560883498456px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">add photos of damage</text></g><g stroke-linecap="round" transform="translate(1888.8628100610167 324.9730077430223) rotate(0 122.26132174348595 31.058319636449994)"><path d="M15.53 0 C68.28 -4.11, 119.92 0.37, 228.99 0 C240.36 -2.54, 242.72 7.95, 244.52 15.53 C246.25 22.71, 241.93 34.94, 244.52 46.59 C248.03 53.46, 240.42 63.56, 228.99 62.12 C150.74 61.35, 75.56 61.89, 15.53 62.12 C1.79 65.06, -1.46 56.95, 0 46.59 C-3.2 33.53, 2.94 27.77, 0 15.53 C-0.68 3.49, 5.96 -1.95, 15.53 0" stroke="none" stroke-width="0" fill="#eebefa"></path><path d="M15.53 0 C93.62 0.87, 169.09 -0.23, 228.99 0 M15.53 0 C63.84 1.37, 112.82 1.98, 228.99 0 M228.99 0 C238.24 -0.82, 242.9 3.98, 244.52 15.53 M228.99 0 C237.09 0.79, 245.77 4.68, 244.52 15.53 M244.52 15.53 C242.99 24.85, 244.18 34.8, 244.52 46.59 M244.52 15.53 C243.51 27.7, 243.6 38.37, 244.52 46.59 M244.52 46.59 C245.7 56.13, 238.98 62.67, 228.99 62.12 M244.52 46.59 C244.48 54.99, 237.23 62.69, 228.99 62.12 M228.99 62.12 C150.25 63.32, 68.18 63.97, 15.53 62.12 M228.99 62.12 C177.03 60.32, 123.98 61.5, 15.53 62.12 M15.53 62.12 C6.53 63.41, -0.88 55.78, 0 46.59 M15.53 62.12 C7.12 63.28, 1.34 59.14, 0 46.59 M0 46.59 C-2.09 39.14, -0.56 33.85, 0 15.53 M0 46.59 C-0.11 33.61, 0.98 21.34, 0 15.53 M0 15.53 C1.24 4.94, 4.55 0.32, 15.53 0 M0 15.53 C-1.95 5.27, 6.81 -0.05, 15.53 0" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(1906.6104212818454 341.0663813765792) rotate(0 98.10993194580078 12.5)"><text x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">order parts required</text></g><g mask="url(#mask-fzNE1GAT-RmHI8opyg-mJ)" stroke-linecap="round"><g transform="translate(1449.2005727379874 278.6431644445689) rotate(0 41.32696325554298 -47.966674298589716)"><path d="M0 0 C6.19 -1.13, 11.99 -0.45, 25.33 0 M0 0 C5.29 0.43, 11.89 -0.89, 25.33 0 M25.33 0 C35.94 1.41, 39.89 -6.13, 41.33 -16 M25.33 0 C35.77 0.36, 39.94 -6.46, 41.33 -16 M41.33 -16 C42.37 -33.99, 40.88 -50.89, 41.33 -79.15 M41.33 -16 C42.3 -36.78, 41.08 -57.8, 41.33 -79.15 M41.33 -79.15 C40.1 -90.5, 46.41 -96.57, 57.33 -95.15 M41.33 -79.15 C43.18 -88.05, 47.54 -93.96, 57.33 -95.15 M57.33 -95.15 C66.54 -96.89, 76.21 -95.85, 82.65 -95.15 M57.33 -95.15 C64.32 -94.81, 71.68 -95.22, 82.65 -95.15" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(1449.2005727379874 278.6431644445689) rotate(0 41.32696325554298 -47.966674298589716)"><path d="M63.26 -88.01 C67.97 -91, 72.25 -92.14, 82.65 -95.15 M63.26 -88.01 C67.08 -89.34, 72.23 -92.4, 82.65 -95.15" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(1449.2005727379874 278.6431644445689) rotate(0 41.32696325554298 -47.966674298589716)"><path d="M63.21 -102.15 C67.84 -101.5, 72.13 -99.02, 82.65 -95.15 M63.21 -102.15 C67.09 -100.02, 72.25 -99.62, 82.65 -95.15" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g></g><mask id="mask-fzNE1GAT-RmHI8opyg-mJ" maskUnits="userSpaceOnUse" x="0" y="0" width="1631.8544992490733" height="473.79293949359624"><rect x="0" y="0" fill="#fff" width="1631.8544992490733" height="473.79293949359624"></rect><rect x="1474.2675414866944" y="213.56827692005527" fill="#000" width="32.519989013671875" height="35" opacity="1"></rect></mask><g transform="translate(1479.2675414866944 218.56827692005527) rotate(0 11.259994506835938 12.10821322592394)"><text x="11.259994506835938" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="middle" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">no</text></g><g mask="url(#mask-FDjyLcfuPt33dD6F8yzS-)" stroke-linecap="round"><g transform="translate(1449.2005727379874 278.6431644445689) rotate(0 41.77677031345388 38.01046527803196)"><path d="M0 0 C9.6 -0.06, 16.61 -1.82, 25.82 0 M0 0 C7.54 0.9, 13.66 0.29, 25.82 0 M25.82 0 C37.1 0.98, 40.2 6.55, 41.82 16 M25.82 0 C35.54 1.1, 43.3 6.88, 41.82 16 M41.82 16 C40.61 31.29, 42.67 50.02, 41.82 60.57 M41.82 16 C42.59 27.32, 42.29 38.32, 41.82 60.57 M41.82 60.57 C42.6 70.08, 47.09 78.35, 57.82 76.57 M41.82 60.57 C42.77 73.32, 48.94 74.71, 57.82 76.57 M57.82 76.57 C66.65 74.88, 73.23 74.96, 83.55 76.57 M57.82 76.57 C66.52 77.41, 73.87 76.02, 83.55 76.57" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(1449.2005727379874 278.6431644445689) rotate(0 41.77677031345388 38.01046527803196)"><path d="M63.88 83.51 C71.45 81.2, 76.45 77.17, 83.55 76.57 M63.88 83.51 C69.8 82.59, 74.33 80.19, 83.55 76.57" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(1449.2005727379874 278.6431644445689) rotate(0 41.77677031345388 38.01046527803196)"><path d="M64.02 69.24 C71.59 71.59, 76.55 72.23, 83.55 76.57 M64.02 69.24 C69.99 71.98, 74.49 73.25, 83.55 76.57" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g></g><mask id="mask-FDjyLcfuPt33dD6F8yzS-" maskUnits="userSpaceOnUse" x="0" y="0" width="1632.7541133648951" height="455.2103878091226"><rect x="0" y="0" fill="#fff" width="1632.7541133648951" height="455.2103878091226"></rect><rect x="1469.9205419787768" y="299.3835939841782" fill="#000" width="42.19996643066406" height="35" opacity="1"></rect></mask><g transform="translate(1474.9205419787768 304.3835939841782) rotate(0 16.056801072664484 12.270035738422663)"><text x="16.09998321533203" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="middle" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">yes</text></g><g stroke-linecap="round"><g transform="translate(1792.9691559813728 355.2103878091226) rotate(0 44.94682703982198 0.5586245942224934)"><path d="M0 0 C27.29 2.27, 55.37 1.41, 89.89 0.83 M0 0 C34.11 -0.36, 69.07 -0.88, 89.89 0.83" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(1792.9691559813728 355.2103878091226) rotate(0 44.94682703982198 0.5586245942224934)"><path d="M66.04 8.31 C72.46 7.52, 79.71 4.04, 89.89 0.83 M66.04 8.31 C74.65 5.17, 84.06 1.43, 89.89 0.83" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(1792.9691559813728 355.2103878091226) rotate(0 44.94682703982198 0.5586245942224934)"><path d="M66.81 -8.77 C73.1 -4.18, 80.11 -2.27, 89.89 0.83 M66.81 -8.77 C75.02 -5.29, 84.13 -2.42, 89.89 0.83" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g></g><mask></mask><g stroke-linecap="round" transform="translate(1515.2292351778142 10) rotate(0 127.19121374927158 33.523265639342924)"><path d="M16.76 0 C67.47 -2.52, 115.27 2.29, 237.62 0 C250.78 1.85, 257.84 6.04, 254.38 16.76 C253.49 28.89, 255.49 46.76, 254.38 50.28 C255.82 62.2, 246.15 67.82, 237.62 67.05 C173.32 69.25, 103.67 69.91, 16.76 67.05 C2.92 70.43, -1.35 63.25, 0 50.28 C-1.07 39.84, -2.9 37.98, 0 16.76 C-0.98 3.52, 8.12 -2.17, 16.76 0" stroke="none" stroke-width="0" fill="#e7f5ff"></path><path d="M16.76 0 C102.5 -0.02, 189.45 0.02, 237.62 0 M16.76 0 C89.56 -1.62, 162.22 -1.45, 237.62 0 M237.62 0 C247.13 0.16, 253.21 5.28, 254.38 16.76 M237.62 0 C249.06 0.04, 256.09 4.3, 254.38 16.76 M254.38 16.76 C252.43 25.22, 255.34 34.79, 254.38 50.28 M254.38 16.76 C254.91 30.88, 254.82 43.7, 254.38 50.28 M254.38 50.28 C252.55 62.09, 249.02 65.74, 237.62 67.05 M254.38 50.28 C252.14 62.7, 249.26 66.53, 237.62 67.05 M237.62 67.05 C163.76 67.2, 91.03 65.83, 16.76 67.05 M237.62 67.05 C176.4 66.34, 113.36 65.82, 16.76 67.05 M16.76 67.05 C6.6 68.33, -1.35 60.61, 0 50.28 M16.76 67.05 C3.9 66.9, -0.05 62.08, 0 50.28 M0 50.28 C-0.95 37.02, -0.55 25.18, 0 16.76 M0 50.28 C-0.27 40.66, -0.32 31.3, 0 16.76 M0 16.76 C-0.99 4.18, 4.72 1.53, 16.76 0 M0 16.76 C-0.22 6.31, 5.19 1.79, 16.76 0" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(1528.7805440148427 17.88782720925724) rotate(0 114.43158813692048 25)"><text x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">add buffer time for QC</text><text x="0" y="42.62" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">and notify rider</text></g><g stroke-linecap="round" transform="translate(1870.742879765563 443.9003982593622) rotate(0 149.3757277753075 35.49522244165712)"><path d="M17.75 0 C81.06 4.7, 140.61 -0.42, 281 0 C296.14 -1.98, 300.43 7.66, 298.75 17.75 C299.95 27.44, 297.29 36.13, 298.75 53.24 C295.79 68.43, 296.14 71.28, 281 70.99 C189.07 68.85, 102.19 70.18, 17.75 70.99 C4.34 68.09, 3.12 65.87, 0 53.24 C-3.69 45.21, -1.44 32.29, 0 17.75 C0 6.12, 9.48 -1.95, 17.75 0" stroke="none" stroke-width="0" fill="#e7f5ff"></path><path d="M17.75 0 C87.42 -2.63, 158.17 -1.73, 281 0 M17.75 0 C91.35 0.99, 165.9 -0.29, 281 0 M281 0 C292.89 -0.38, 297.24 7.14, 298.75 17.75 M281 0 C293.44 1.48, 300.33 4.04, 298.75 17.75 M298.75 17.75 C297.24 27.18, 297.62 31.52, 298.75 53.24 M298.75 17.75 C298.73 30.84, 299.88 44.34, 298.75 53.24 M298.75 53.24 C300.22 64.04, 292.87 69.14, 281 70.99 M298.75 53.24 C296.63 63.44, 290.64 70.6, 281 70.99 M281 70.99 C220.69 73.84, 162.83 73.23, 17.75 70.99 M281 70.99 C193.01 70.54, 105.2 70.36, 17.75 70.99 M17.75 70.99 C6.11 69.57, 1.61 65.1, 0 53.24 M17.75 70.99 C5.79 69.61, 1.26 63.19, 0 53.24 M0 53.24 C-0.12 38.4, -1.6 24.3, 0 17.75 M0 53.24 C-0.41 40.15, 0.35 26.9, 0 17.75 M0 17.75 C0.27 6.3, 5.31 1.54, 17.75 0 M0 17.75 C-1.99 7.22, 5.38 2.22, 17.75 0" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(1885.53255578292 452.10594468366196) rotate(0 138.80992126464844 25)"><text x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">calc ETA + repair time + QC </text><text x="0" y="42.62" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">then notify rider</text></g><g stroke-linecap="round"><g transform="translate(2009.471765534286 393.47369148791006) rotate(0 0.1630378163754358 21.661118866626936)"><path d="M0.16 0.93 C0.02 8.02, 0.26 35.8, 0.2 42.39" stroke="#1e1e1e" stroke-width="2.5" fill="none" stroke-dasharray="8 10"></path></g></g><mask></mask><g stroke-linecap="round"><g transform="translate(1639.9998465726921 83.32134148199646) rotate(0 -0.3961733803153038 22.4992221335204)"><path d="M-0.77 -0.99 C-0.77 6.63, -0.06 38.34, -0.02 45.99" stroke="#1e1e1e" stroke-width="2.5" fill="none" stroke-dasharray="8 10"></path></g></g><mask></mask><g stroke-linecap="round" transform="translate(2476.060472658429 194.3702154175162) rotate(0 66.81401462667964 45.34810857161699)"><path d="M22.67 0 C46.05 -1.37, 75.76 -0.64, 110.95 0 C121.83 1.05, 128.23 6.16, 133.63 22.67 C128.76 40.74, 131.23 51.58, 133.63 68.02 C129.77 84.03, 124.97 89.45, 110.95 90.7 C77.2 89.58, 48 87.27, 22.67 90.7 C3.03 86.15, -5.45 85.98, 0 68.02 C-0.19 45.86, -4.9 31.19, 0 22.67 C-5.1 5.3, 12.17 -0.18, 22.67 0" stroke="none" stroke-width="0" fill="#eebefa"></path><path d="M22.67 0 C43.55 3.83, 65.52 -1.48, 110.95 0 M22.67 0 C41.42 -3.04, 60.49 -3.43, 110.95 0 M110.95 0 C125.27 1.94, 134.93 10.23, 133.63 22.67 M110.95 0 C129.02 3.86, 129.5 6.88, 133.63 22.67 M133.63 22.67 C133.14 38.4, 129.58 55.94, 133.63 68.02 M133.63 22.67 C134.92 33.8, 134.29 47.28, 133.63 68.02 M133.63 68.02 C134.14 82.19, 127.67 92.34, 110.95 90.7 M133.63 68.02 C134.63 82.88, 130 87.78, 110.95 90.7 M110.95 90.7 C77.17 93.21, 47.92 93.59, 22.67 90.7 M110.95 90.7 C84.27 90.94, 62.61 92.81, 22.67 90.7 M22.67 90.7 C5.11 89.58, -3.2 85.82, 0 68.02 M22.67 90.7 C9.67 95.07, 4.45 83.55, 0 68.02 M0 68.02 C1.23 50.14, 0.69 36.4, 0 22.67 M0 68.02 C0.18 59.14, 2.03 51.35, 0 22.67 M0 22.67 C-3.9 6.38, 3.79 1.9, 22.67 0 M0 22.67 C2.06 10.75, 3.69 3.66, 22.67 0" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g stroke-linecap="round"><g transform="translate(1726.2605034631451 183.4933893955416) rotate(0 373.40395919149137 27.445335135965394)"><path d="M0 0 C100.17 -1.63, 200.05 -1.95, 355.9 0 M0 0 C119.64 0.79, 239.11 -0.14, 355.9 0 M355.9 0 C365.03 -0.4, 370.7 5.72, 371.9 16 M355.9 0 C364.82 0.98, 373.19 6.67, 371.9 16 M371.9 16 C370.07 19.1, 371.43 27.67, 371.9 40.23 M371.9 16 C371.26 22.93, 372.22 29.03, 371.9 40.23 M371.9 40.23 C373.15 52.78, 375.42 56.37, 387.9 56.23 M371.9 40.23 C372.62 51.3, 379.25 55.36, 387.9 56.23 M387.9 56.23 C499.1 53.75, 612.15 53.58, 746.81 56.23 M387.9 56.23 C462.99 54.18, 536.92 54.7, 746.81 56.23" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(1726.2605034631451 183.4933893955416) rotate(0 373.40395919149137 27.445335135965394)"><path d="M723.26 64.62 C730.3 60.77, 736.83 57.92, 746.81 56.23 M723.26 64.62 C731.42 62.41, 739.29 58.14, 746.81 56.23" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(1726.2605034631451 183.4933893955416) rotate(0 373.40395919149137 27.445335135965394)"><path d="M723.37 47.52 C730.25 48.47, 736.74 50.43, 746.81 56.23 M723.37 47.52 C731.39 51.05, 739.22 52.52, 746.81 56.23" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g></g><mask></mask><g transform="translate(2490.869570699952 226.04972195604262) rotate(0 50.929969787597656 12.5)"><text x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">starts job</text></g><g stroke-linecap="round" transform="translate(2164.503696410302 323.4709381896856) rotate(0 130.04566431683406 31.058319636449994)"><path d="M15.53 0 C65.15 1.07, 116.17 1.73, 244.56 0 C258.17 -2.13, 256.92 6.72, 260.09 15.53 C260.17 28.01, 258.7 34.49, 260.09 46.59 C257.85 58.14, 255.23 64.81, 244.56 62.12 C179.75 61.95, 111.27 58.58, 15.53 62.12 C5.21 62.72, 3.09 58.58, 0 46.59 C2.38 33.86, 3.27 24.78, 0 15.53 C1.13 2.76, 3.04 -0.58, 15.53 0" stroke="none" stroke-width="0" fill="#eebefa"></path><path d="M15.53 0 C78.6 -1.39, 143 -0.12, 244.56 0 M15.53 0 C92.3 1.04, 168.15 2.01, 244.56 0 M244.56 0 C253.88 -1.87, 261.62 4.22, 260.09 15.53 M244.56 0 C254.87 -1.13, 259.48 4.13, 260.09 15.53 M260.09 15.53 C261.12 21.21, 258.54 28.8, 260.09 46.59 M260.09 15.53 C260.72 26.53, 259.62 38.98, 260.09 46.59 M260.09 46.59 C260.84 57.67, 255.83 60.83, 244.56 62.12 M260.09 46.59 C260.35 57.76, 254.88 61.64, 244.56 62.12 M244.56 62.12 C167.57 62.4, 88.29 62.28, 15.53 62.12 M244.56 62.12 C192.43 63.44, 140.25 63.49, 15.53 62.12 M15.53 62.12 C5.98 61.75, 1.05 57.03, 0 46.59 M15.53 62.12 C5.3 61.88, 0.05 55.43, 0 46.59 M0 46.59 C0.97 35.83, -1.21 24.44, 0 15.53 M0 46.59 C-0.38 37.75, -0.93 29.98, 0 15.53 M0 15.53 C1.74 4.85, 6.89 -0.23, 15.53 0 M0 15.53 C0.84 5.62, 3.38 -0.28, 15.53 0" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(2177.784222126916 341.05621500446705) rotate(0 116.74991607666016 12.5)"><text x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">wait for parts to arrive</text></g><g stroke-linecap="round"><g transform="translate(2430.59502504397 354.53546949006295) rotate(0 21.23669840107914 -57.21268070441958)"><path d="M0 0 C3.45 1.48, 5.78 0.64, 8.87 0 M0 0 C2.33 -0.66, 6.16 -0.74, 8.87 0 M8.87 0 C14 -3.9, 21.37 -0.61, 17.73 -8.87 M8.87 0 C13 1.65, 22.3 -5.64, 17.73 -8.87 M17.73 -8.87 C17.39 -31.98, 19.65 -57.92, 17.73 -102.44 M17.73 -8.87 C17 -29.54, 18.64 -45.74, 17.73 -102.44 M17.73 -102.44 C15.39 -114.46, 18.45 -114.32, 30.1 -114.81 M17.73 -102.44 C17.67 -106.7, 23.16 -114.16, 30.1 -114.81 M30.1 -114.81 C34.24 -113.09, 39.79 -113.78, 42.47 -114.81 M30.1 -114.81 C34.63 -114.22, 36.72 -116.06, 42.47 -114.81" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(2430.59502504397 354.53546949006295) rotate(0 21.23669840107914 -57.21268070441958)"><path d="M30.7 -110.74 C34.41 -112.39, 39.61 -113.21, 41.8 -115.88 M30.36 -112.37 C33.61 -111.94, 35.38 -112.73, 43.09 -115.17" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(2430.59502504397 354.53546949006295) rotate(0 21.23669840107914 -57.21268070441958)"><path d="M31.55 -119.16 C34.88 -117.83, 39.79 -115.67, 41.8 -115.88 M31.21 -120.79 C34.28 -118.56, 35.86 -117.55, 43.09 -115.17" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g></g><mask></mask><g stroke-linecap="round" transform="translate(2746.718448473062 196.61032722990365) rotate(0 70.7042457113946 43.208150156963484)"><path d="M21.6 0 C41.82 -1.16, 65.44 -1.88, 119.8 0 C138.31 -0.8, 144.95 10.35, 141.41 21.6 C145.71 38.42, 141.54 49.74, 141.41 64.81 C144.99 80.03, 130.85 82.49, 119.8 86.42 C93.42 81.08, 70.77 88.25, 21.6 86.42 C7.65 88.79, -4.35 75.88, 0 64.81 C-3.24 53.21, 1.86 31.63, 0 21.6 C-3.85 5.98, 4.82 -1.1, 21.6 0" stroke="none" stroke-width="0" fill="#eebefa"></path><path d="M21.6 0 C46.3 -0.92, 72.95 -2.5, 119.8 0 M21.6 0 C60.47 2.45, 96.86 1.63, 119.8 0 M119.8 0 C132.81 3.87, 139.33 4.63, 141.41 21.6 M119.8 0 C136.97 -0.1, 136.99 8.15, 141.41 21.6 M141.41 21.6 C141.18 29.69, 139.06 43.17, 141.41 64.81 M141.41 21.6 C141.08 29.11, 143.2 40.26, 141.41 64.81 M141.41 64.81 C143.08 76.42, 131.74 87.48, 119.8 86.42 M141.41 64.81 C141.96 77.81, 136.25 87.52, 119.8 86.42 M119.8 86.42 C91.08 90.27, 59.56 85.42, 21.6 86.42 M119.8 86.42 C86.06 85.63, 52.86 86.01, 21.6 86.42 M21.6 86.42 C5.37 89.64, -1.94 82.38, 0 64.81 M21.6 86.42 C4.93 83.67, 3.4 83.54, 0 64.81 M0 64.81 C0.92 59.81, -3.77 50.65, 0 21.6 M0 64.81 C-0.25 51.64, -0.67 41.43, 0 21.6 M0 21.6 C2.65 7.99, 8.29 -2.16, 21.6 0 M0 21.6 C-1 5.18, 4.68 3.79, 21.6 0" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(2791.497804090279 226.10007764486545) rotate(0 26.20996856689453 12.5)"><text x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">finish</text></g><g transform="translate(2575.8580475030467 311.9996136489326) rotate(0 175.287841796875 60)"><text x="0" y="14.096" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">- ask for help</text><text x="0" y="34.096000000000004" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">- add delay ? </text><text x="0" y="54.096000000000004" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">reasons : </text><text x="0" y="74.096" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">- bigger fault found! reorder parts?</text><text x="0" y="94.096" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">- abandon job due to emergency. call manager</text><text x="0" y="114.096" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">notify rider of delay after calculating ETA.</text></g><g stroke-linecap="round"><g transform="translate(2615.688501911789 239.72739361084746) rotate(0 62.51497328063647 0.39696527460175446)"><path d="M0 0 C44.43 -0.44, 95.05 1.83, 125.03 0.1 M0 0 C46.28 1.47, 93.72 0.71, 125.03 0.1" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(2615.688501911789 239.72739361084746) rotate(0 62.51497328063647 0.39696527460175446)"><path d="M100.67 7.99 C111.45 5.93, 120.66 2.41, 125.31 -1.1 M102.6 9.15 C111.29 4.71, 119.27 2.44, 124.13 -0.06" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(2615.688501911789 239.72739361084746) rotate(0 62.51497328063647 0.39696527460175446)"><path d="M100.39 -9.11 C111.22 -4.81, 120.53 -1.98, 125.31 -1.1 M102.32 -7.95 C111.01 -5.73, 119.1 -1.35, 124.13 -0.06" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g></g><mask></mask><g stroke-linecap="round" transform="translate(2981.1920182335434 191.80590165147248) rotate(0 84.09335144273882 48.40256856297174)"><path d="M24.2 0 C62.71 1.63, 98.58 6.91, 143.99 0 C162.14 -1, 170.73 6.23, 168.19 24.2 C166.72 41.51, 165.44 48.03, 168.19 72.6 C169.06 85.25, 164.07 92.54, 143.99 96.81 C111.27 100.19, 80.13 97.79, 24.2 96.81 C8 100.61, 3.04 93.27, 0 72.6 C4.43 57.89, -3.36 47.67, 0 24.2 C-2.92 6.61, 10.39 5.28, 24.2 0" stroke="none" stroke-width="0" fill="#eaddd7"></path><path d="M24.2 0 C56.72 -3.55, 92.74 -2.77, 143.99 0 M24.2 0 C67.78 0.97, 114.82 0.39, 143.99 0 M143.99 0 C157.84 -2.07, 167.85 11.98, 168.19 24.2 M143.99 0 C158.1 -3.93, 165.4 9.33, 168.19 24.2 M168.19 24.2 C168.26 39.9, 163.85 51.49, 168.19 72.6 M168.19 24.2 C166.32 41.08, 167.75 56.43, 168.19 72.6 M168.19 72.6 C169.64 91.34, 157.24 94.47, 143.99 96.81 M168.19 72.6 C168.06 90.7, 161.86 101.4, 143.99 96.81 M143.99 96.81 C99.5 96.43, 50.91 95.9, 24.2 96.81 M143.99 96.81 C105.11 98.26, 65.24 97.48, 24.2 96.81 M24.2 96.81 C9.14 95.47, -1.24 89.84, 0 72.6 M24.2 96.81 C4.89 97.76, 1.56 86.18, 0 72.6 M0 72.6 C0.31 61.23, -0.83 51.62, 0 24.2 M0 72.6 C1.66 56.54, -1.36 35.92, 0 24.2 M0 24.2 C3.61 8.35, 5.42 -3.62, 24.2 0 M0 24.2 C1.48 7.66, 11.35 3.61, 24.2 0" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(3016.3938862793416 225.80823670871962) rotate(0 51.911956787109375 10)"><text x="0" y="14.096" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Quality check</text></g><g stroke-linecap="round" transform="translate(3274.540918615191 181.04977530414544) rotate(0 99.73862612976029 60.136524578237726)"><path d="M30.07 0 C74 0.88, 113.37 -1.63, 169.41 0 C186.62 -4.06, 200.57 13.4, 199.48 30.07 C193.76 44.36, 200.03 69.9, 199.48 90.2 C198.68 110.37, 188.09 119.8, 169.41 120.27 C128.44 123.92, 88.71 118.5, 30.07 120.27 C15.57 116.85, 2.36 105.15, 0 90.2 C-3.66 74.81, -4.51 61.18, 0 30.07 C1.31 13.69, 15.07 4.51, 30.07 0" stroke="none" stroke-width="0" fill="#b2f2bb"></path><path d="M30.07 0 C56.95 -4.6, 88.48 -0.2, 169.41 0 M30.07 0 C64.81 4.2, 95.51 4.53, 169.41 0 M169.41 0 C188.98 -1.4, 201.84 7.53, 199.48 30.07 M169.41 0 C193.81 -2.02, 201.94 6.55, 199.48 30.07 M199.48 30.07 C195.46 53.23, 203.07 68.85, 199.48 90.2 M199.48 30.07 C197.93 41.56, 199.29 57.66, 199.48 90.2 M199.48 90.2 C202.99 107.32, 187.78 119.78, 169.41 120.27 M199.48 90.2 C195.96 111.47, 191.53 122.05, 169.41 120.27 M169.41 120.27 C119.24 124.59, 66.81 125.94, 30.07 120.27 M169.41 120.27 C137.09 118.46, 110.37 119.83, 30.07 120.27 M30.07 120.27 C11.13 121.38, -2.22 113.28, 0 90.2 M30.07 120.27 C10.22 122.45, 0.39 109.88, 0 90.2 M0 90.2 C2.51 78.62, -3.4 60.95, 0 30.07 M0 90.2 C-0.62 78, -1.31 61.12, 0 30.07 M0 30.07 C-0.79 6.79, 7.88 -2.37, 30.07 0 M0 30.07 C1.56 11.54, 11.01 2.83, 30.07 0" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(3300.942319649539 200.60636866292202) rotate(0 78.7208784209613 40)"><text x="0" y="14.096" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">job marked as done.</text><text x="0" y="34.096000000000004" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">rider notified that</text><text x="0" y="54.096000000000004" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">vehicle is ready for</text><text x="0" y="74.096" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">pickup</text></g><g mask="url(#mask-E_sohQ0BtY5JVQ1op_vWo)" stroke-linecap="round"><g transform="translate(3155.3787211190215 240.21815072815684) rotate(0 56.581098748084514 0.34989118449908574)"><path d="M0 0 C39.14 -1.13, 73.39 1.01, 113.16 0.98 M0 0 C38.77 0.82, 80.31 1.17, 113.16 0.98" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(3155.3787211190215 240.21815072815684) rotate(0 56.581098748084514 0.34989118449908574)"><path d="M90.22 8.15 C96.26 6.31, 106.65 3.56, 114.2 -0.52 M88.69 9.79 C99.43 5.83, 107.12 2.47, 112.23 1.48" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(3155.3787211190215 240.21815072815684) rotate(0 56.581098748084514 0.34989118449908574)"><path d="M90.2 -8.95 C96.15 -5.03, 106.54 -2.04, 114.2 -0.52 M88.68 -7.32 C99.41 -4.73, 107.1 -1.56, 112.23 1.48" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g></g><mask id="mask-E_sohQ0BtY5JVQ1op_vWo" maskUnits="userSpaceOnUse" x="0" y="0" width="3368.5409186151905" height="341.1983271872988"><rect x="0" y="0" fill="#fff" width="3368.5409186151905" height="341.1983271872988"></rect><rect x="3189.3678398866373" y="225.70823895772781" fill="#000" width="45.1839599609375" height="30" opacity="1"></rect></mask><g transform="translate(3194.3678398866373 230.70823895772787) rotate(0 17.59197998046875 9.859802954928114)"><text x="17.59197998046875" y="14.096" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="middle" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">pass</text></g><g stroke-linecap="round"><g transform="translate(2894.126939895851 239.82711901689856) rotate(0 40.53253916884614 0.18094251227675073)"><path d="M0 0 C15.85 0.14, 37.56 -2.05, 81.07 0.39 M0 0 C32.52 0.77, 62.77 1.9, 81.07 0.39" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(2894.126939895851 239.82711901689856) rotate(0 40.53253916884614 0.18094251227675073)"><path d="M56.87 9.37 C63.88 6.28, 69.94 4.7, 80.96 1.38 M57.94 8.98 C65.35 7.3, 72.92 4.3, 80.75 -0.12" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(2894.126939895851 239.82711901689856) rotate(0 40.53253916884614 0.18094251227675073)"><path d="M56.23 -7.72 C63.38 -7.03, 69.58 -4.82, 80.96 1.38 M57.3 -8.11 C64.89 -4.21, 72.68 -1.62, 80.75 -0.12" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g></g><mask></mask><g stroke-linecap="round" transform="translate(1001.290494878177 242.77101709274848) rotate(0 82.03337601522867 35)"><path d="M17.5 0 C56.28 4.72, 88.74 0.8, 146.57 0 C159.25 0.38, 158.9 8.26, 164.07 17.5 C168.25 26.4, 159.99 39.15, 164.07 52.5 C165.11 68.84, 161.41 73.53, 146.57 70 C114.59 72.98, 89.45 72.8, 17.5 70 C5.97 65.91, 2.13 60.14, 0 52.5 C-3.24 46.26, 4.29 37.44, 0 17.5 C0.42 6.87, 3.89 3.28, 17.5 0" stroke="none" stroke-width="0" fill="#ffec99"></path><path d="M17.5 0 C48.28 0.46, 84.79 -0.75, 146.57 0 M17.5 0 C50.22 -1.56, 78.7 -0.63, 146.57 0 M146.57 0 C156.59 2.98, 166.84 5.92, 164.07 17.5 M146.57 0 C161.82 2.86, 164.05 8.52, 164.07 17.5 M164.07 17.5 C161.01 27.97, 165 34.31, 164.07 52.5 M164.07 17.5 C164.11 27.83, 162.05 42.85, 164.07 52.5 M164.07 52.5 C166.05 66.98, 161.4 69.25, 146.57 70 M164.07 52.5 C167.43 61.4, 158.75 69.03, 146.57 70 M146.57 70 C112.93 71.45, 83.81 69.21, 17.5 70 M146.57 70 C106.11 69.64, 65.41 72.32, 17.5 70 M17.5 70 C8.54 70.58, -0.3 63.57, 0 52.5 M17.5 70 C3.64 72.07, -3.21 65.01, 0 52.5 M0 52.5 C-2.98 38.68, -0.01 23.64, 0 17.5 M0 52.5 C1.49 41.44, -0.7 30.77, 0 17.5 M0 17.5 C0.49 1.87, 2.88 -2.67, 17.5 0 M0 17.5 C-1.68 6.3, 3.42 -4.18, 17.5 0" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(1006.7399399241676 247.77101709274848) rotate(0 76.58393096923828 30)"><text x="76.58393096923828" y="14.096" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="middle" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">general inspection</text><text x="76.58393096923828" y="34.096000000000004" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="middle" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">odometer + battery</text><text x="76.58393096923828" y="54.096000000000004" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="middle" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">reading</text></g><g stroke-linecap="round"><g transform="translate(898.7543777273504 193.28070247869937) rotate(0 48.268058575413306 42.141090351764475)"><path d="M0 0 C9.47 1.06, 21.76 -2.62, 32.27 0 M0 0 C11.62 1.31, 24.44 -1.59, 32.27 0 M32.27 0 C41.19 2.34, 49.46 8.56, 48.27 16 M32.27 0 C46.09 3.39, 49.63 2, 48.27 16 M48.27 16 C50.81 33.07, 47.63 51.42, 48.27 68.5 M48.27 16 C47.49 29.41, 47.54 41.11, 48.27 68.5 M48.27 68.5 C50.08 77.16, 50.23 85.12, 64.27 84.5 M48.27 68.5 C43.72 76.55, 58.16 83.93, 64.27 84.5 M64.27 84.5 C79.19 84.9, 90.88 83.68, 96.54 84.5 M64.27 84.5 C70.83 85.25, 82.76 85.71, 96.54 84.5" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(898.7543777273504 193.28070247869937) rotate(0 48.268058575413306 42.141090351764475)"><path d="M74.01 94.87 C82.06 89.81, 89.93 88.81, 96.84 83.93 M73.93 94.62 C82.87 91.48, 91.46 87.88, 96.83 83.77" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(898.7543777273504 193.28070247869937) rotate(0 48.268058575413306 42.141090351764475)"><path d="M73.06 78.39 C81.41 78.53, 89.58 82.73, 96.84 83.93 M72.99 78.14 C82.28 81.1, 91.22 83.6, 96.83 83.77" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g></g><mask></mask><g stroke-linecap="round"><g transform="translate(901.7543777273504 371.0368927767752) rotate(0 46.768058575413306 -46.94445089924035)"><path d="M0 0 C10.87 -3.34, 22.31 -0.33, 30.77 0 M0 0 C6.27 -1.51, 15.04 0.43, 30.77 0 M30.77 0 C43.85 3.78, 47.15 -8.14, 46.77 -16 M30.77 0 C44.08 -2.02, 42.35 -4.45, 46.77 -16 M46.77 -16 C44.18 -35.45, 44.04 -53.59, 46.77 -77.26 M46.77 -16 C47.14 -30.63, 48.15 -46.65, 46.77 -77.26 M46.77 -77.26 C47.51 -87.24, 49.47 -96.82, 62.77 -93.26 M46.77 -77.26 C50.41 -87.68, 56.45 -97.31, 62.77 -93.26 M62.77 -93.26 C75.94 -91.36, 82.94 -97.09, 93.54 -93.26 M62.77 -93.26 C73.81 -95.17, 83.82 -92.65, 93.54 -93.26" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(901.7543777273504 371.0368927767752) rotate(0 46.768058575413306 -46.94445089924035)"><path d="M71.72 -86.9 C79.7 -88.2, 85.14 -89.19, 92.94 -94.3 M72.08 -84.55 C76.31 -87.9, 81.54 -89.31, 92.58 -93.07" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(901.7543777273504 371.0368927767752) rotate(0 46.768058575413306 -46.94445089924035)"><path d="M71.89 -102.89 C79.79 -98.8, 85.17 -94.38, 92.94 -94.3 M72.25 -100.54 C76.48 -100.44, 81.67 -98.41, 92.58 -93.07" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g></g><mask></mask><g stroke-linecap="round"><g transform="translate(1171.3572469086348 277.7780170927484) rotate(0 34.816811999540505 1.023556917328193)"><path d="M0 0 C26.47 2.73, 47.88 3.35, 69.63 0.87 M0 0 C21.35 0.74, 44.53 -1.79, 69.63 0.87" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(1171.3572469086348 277.7780170927484) rotate(0 34.816811999540505 1.023556917328193)"><path d="M46.56 9 C53.44 6.69, 62.91 2.48, 70.21 0.93 M46.54 7.7 C54.03 5.05, 61.14 2.58, 70.16 0.7" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(1171.3572469086348 277.7780170927484) rotate(0 34.816811999540505 1.023556917328193)"><path d="M47.5 -8.08 C53.92 -4.32, 63.05 -2.45, 70.21 0.93 M47.49 -9.37 C54.81 -6.16, 61.6 -2.76, 70.16 0.7" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g></g><mask></mask><g mask="url(#mask-SyNolUoFJ13NZ5pE2ee3s)" stroke-linecap="round"><g transform="translate(3065.302188346571 294.61103877741596) rotate(0 -990.3484394412247 220.64944073978086)"><path d="M0 0 C1.13 84.96, 3.32 174.3, 0 420.57 M0 0 C-2.44 103.95, -1.65 207.75, 0 420.57 M0 420.57 C0.86 431.19, -5.36 438.27, -16 436.57 M0 420.57 C3.93 429.55, -9.19 435.73, -16 436.57 M-16 436.57 C-596.86 442.5, -1177.01 443.24, -1965.96 436.57 M-16 436.57 C-658.08 420.91, -1300.72 421.26, -1965.96 436.57 M-1965.96 436.57 C-1978.7 440.29, -1984.22 430.84, -1981.96 420.57 M-1965.96 436.57 C-1975.7 435.89, -1984.05 429.05, -1981.96 420.57 M-1981.96 420.57 C-1981.4 339.76, -1980.89 259.3, -1981.96 24.16 M-1981.96 420.57 C-1980.74 272.27, -1980.86 124.01, -1981.96 24.16" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(3065.302188346571 294.61103877741596) rotate(0 -990.3484394412247 220.64944073978086)"><path d="M-1973.91 46.01 C-1973.74 43.79, -1978.01 37.03, -1980.63 23.67 M-1973.03 47.58 C-1976.3 40.19, -1978.37 31.51, -1982.8 23.98" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g><g transform="translate(3065.302188346571 294.61103877741596) rotate(0 -990.3484394412247 220.64944073978086)"><path d="M-1991.01 46.13 C-1987.32 43.76, -1988.06 36.98, -1980.63 23.67 M-1990.13 47.7 C-1987.65 40.17, -1983.97 31.45, -1982.8 23.98" stroke="#1e1e1e" stroke-width="2" fill="none"></path></g></g><mask id="mask-SyNolUoFJ13NZ5pE2ee3s" maskUnits="userSpaceOnUse" x="0" y="0" width="5147.264099124533" height="831.1846184133136"><rect x="0" y="0" fill="#fff" width="5147.264099124533" height="831.1846184133136"></rect><rect x="2069.065238838889" y="716.1846184133136" fill="#000" width="34.671966552734375" height="30" opacity="1"></rect></mask><g transform="translate(2074.065238838889 721.1846184133136) rotate(0 0.8885100664571155 -205.9241388961168)"><text x="12.335983276367188" y="14.096" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="middle" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">fail</text></g></svg></div>
+          <div class="flow-tools">
+            <button type="button" id="flow-out" aria-label="Zoom out">−</button>
+            <button type="button" id="flow-in" aria-label="Zoom in">+</button>
+            <button type="button" id="flow-fit">Fit</button>
+            <button type="button" id="flow-full">Full screen</button>
+          </div>
+        </div>
+        <figcaption>User flow, from the manager's job to ready for pickup · drag to move, pinch or ⌘ + scroll to zoom</figcaption>
+      </figure>
+      <div class="cs-prose">
+        <p>My first wireframes had the right steps but vague words. "TBD: 2 days" could mean the part, the fix or the scooter, so I changed it to a date.</p>
+      </div>
+      <figure class="cs-figure">
+        <button class="cs-figure-open" type="button" data-caption="First wireframes of the check and parts flow" aria-label="Enlarge: first wireframes of the check and parts flow"><span class="cs-figure-frame is-plain"><img src="screens/wireframes.png" alt="Hand-drawn wireframes: a list of scheduled vehicles, a vehicle card, inspection photos, odometer and battery, and damage photos" width="1614" height="652"></span></button>
+        <figcaption>First wireframes of the check and parts flow</figcaption>
+      </figure>
+    </section>
+
+    <section id="assumptions" class="cs-section appear" aria-labelledby="assumptions-title">
+      <h2 id="assumptions-title" class="cs-subhead">Assumptions and decisions</h2>
+      <div class="cs-prose">
+        <ul class="cs-list">
+          <li><span class="cs-label">Parts database.</span> Every EV part is listed with its cost and how long it takes to reach the garage. The app shows which parts are already in the garage and which are a couple of days away.</li>
+          <li><span class="cs-label">Pickup date = part ETA + 1 day to fix.</span> I'm assuming a technician needs about a day to finish a job once the part arrives. If a job needs several parts, the last one to arrive sets the date. If it needs no parts, the scooter is ready the same day.</li>
+          <li><span class="cs-label">The manager creates every job.</span> This comes from the brief.</li>
+          <li><span class="cs-label">Quality check on every job.</span> Services get one too.</li>
+        </ul>
+        <p class="cs-minihead">Design decisions</p>
+        <ul class="cs-list">
+          <li><span class="cs-label">Damage photos come with part requests.</span> I made parts requestable once a technician adds photos of the damage, so the manager can see why each part is needed.</li>
+          <li><span class="cs-label">Dash scan.</span> I chose to read the odometer and battery level from a photo of the scooter's dash, so nothing has to be typed.</li>
+          <li><span class="cs-label">Every Next saves to the phone.</span> I made every step save on the phone, so if the signal drops, nothing has to be filled in twice.</li>
+        </ul>
+        <p class="cs-minihead">Left out, and why</p>
+        <ul class="cs-list">
+          <li><span class="cs-label">Inventory, tools and screws.</span> These are an inventory problem, not a job card one, so they're out of scope. The app only tracks the EV parts a job needs.</li>
+          <li><span class="cs-label">Timers and micromanagement.</span> I left these out to keep accountability without surveillance, so technicians don't have to log breaks. Every tap is time-stamped and every job has photos and parts, so the app doesn't need to watch anyone.</li>
+          <li><span class="cs-label">Guided photo angles.</span> Technicians already know what to shoot, and a strict checklist would turn the check into a chore.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="system" class="cs-section appear" aria-labelledby="system-title">
+      <h2 id="system-title" class="cs-subhead">System</h2>
+      <div class="cs-prose">
+        <ul class="cs-list">
+          <li>I tried a dark Cred-style look and an Airbnb-style one, then went plain and light for a bright workshop.</li>
+          <li>The type is Be Vietnam Pro at −3% letter spacing on a 4px scale, with 52px buttons for greasy thumbs.</li>
+          <li><span class="cs-strong">Colour only means status:</span> red is urgent, blue is waiting and green is ready.</li>
+          <li>Buttons name the real next step, like "Mark as repaired" instead of "Done". Nothing is done until it passes the quality check.</li>
+        </ul>
+        <p>I tested the flow against three jobs: an urgent brake failure, a job whose parts just arrived, and a routine maintenance check with no damage or parts required. I also added a path for closing a job that can't be finished.</p>
+      </div>
+      <figure class="cs-figure">
+        <button class="cs-figure-open" type="button" data-caption="Flow board with the three jobs and closing a job" aria-label="Enlarge: flow board with the three jobs and closing a job"><span class="cs-figure-frame is-plain"><img src="screens/board.png" alt="Figma board with rows of screens: onboarding, the check, parts arrived and sent for quality check, a service with no parts, and closing a job" width="2400" height="1832"></span></button>
+        <figcaption>Flow board with the three jobs and closing a job</figcaption>
+      </figure>
+    </section>
+
+    <section id="screens" class="cs-section appear" aria-labelledby="screens-title">
+      <h2 id="screens-title" class="cs-subhead">Screens</h2>
+      <div class="cs-prose">
+        <p>Technicians share one phone, so they pick their name (recent ones first) and enter a PIN. The Today screen has two tabs: Jobs, with urgent jobs pinned on top, and Repaired, which shows each quality check result.</p>
+      </div>
+      <div class="cs-pair">
+        <figure class="cs-figure">
+          <button class="cs-figure-open" type="button" data-caption="Pick your name, recent ones first" aria-label="Enlarge: pick your name, recent ones first"><span class="cs-figure-frame"><img src="screens/profiles.png" alt="Profile screen: a search box, three recent technicians as tiles, and everyone at the hub in an A to Z list with their jobs today" width="360" height="800"></span></button>
+          <figcaption>Pick your name, recent ones first</figcaption>
+        </figure>
+        <figure class="cs-figure">
+          <button class="cs-figure-open" type="button" data-caption="Today: the Jobs tab, with the urgent job on top" aria-label="Enlarge: today, the jobs tab"><span class="cs-figure-frame"><img src="screens/today.png" alt="Today screen on the Jobs tab: the urgent brake job on top, then jobs with parts arrived, a failed quality check, and scooters arriving later" width="360" height="800"></span></button>
+          <figcaption>Today: the Jobs tab, urgent job on top</figcaption>
+        </figure>
+      </div>
+      <div class="cs-prose">
+        <p>The check has three steps: photos, a dash scan, then damage. With no signal, photos save on the phone and send later. An optional voice note explains the damage and helps the manager approve parts.</p>
+      </div>
+      <div class="cs-pair">
+        <figure class="cs-figure">
+          <button class="cs-figure-open" type="button" data-caption="Photos saved on the phone with no signal" aria-label="Enlarge: photos saved on the phone with no signal"><span class="cs-figure-frame"><img src="screens/photos.png" alt="Photo screen with a no-signal message saying the latest photo is saved on the phone" width="360" height="800"></span></button>
+          <figcaption>Photos saved with no signal</figcaption>
+        </figure>
+        <figure class="cs-figure">
+          <button class="cs-figure-open" type="button" data-caption="Damage photos with an optional voice note" aria-label="Enlarge: damage photos with an optional voice note"><span class="cs-figure-frame"><img src="screens/damage.png" alt="Damage screen with photos of the damaged part and a recorded voice note" width="360" height="800"></span></button>
+          <figcaption>Damage photos with a voice note</figcaption>
+        </figure>
+      </div>
+      <div class="cs-prose">
+        <p>Parts are grouped by area of the scooter. Ordering a part updates the rider's pickup date. When the part arrives, the job skips the check and opens straight on repair.</p>
+      </div>
+      <div class="cs-pair">
+        <figure class="cs-figure">
+          <button class="cs-figure-open" type="button" data-caption="Parts by area, with price, stock and a ready-by date" aria-label="Enlarge: parts by area, with price, stock and a ready-by date"><span class="cs-figure-frame"><img src="screens/parts.png" alt="Parts screen: part categories, a list with prices and stock status, and a ready-by date" width="360" height="800"></span></button>
+          <figcaption>Parts by area, with stock and a ready-by date</figcaption>
+        </figure>
+        <figure class="cs-figure">
+          <button class="cs-figure-open" type="button" data-caption="Parts arrived, straight to repair" aria-label="Enlarge: parts arrived, straight to repair"><span class="cs-figure-frame"><img src="screens/parts-arrived.png" alt="Job screen showing parts arrived today, with a start repair button" width="360" height="800"></span></button>
+          <figcaption>Parts arrived, straight to repair</figcaption>
+        </figure>
+      </div>
+      <div class="cs-prose">
+        <p>If the quality check fails, the reason comes back as a voice note with photos. The technician can fix it again, order more parts, or close the job with a reason. The manager decides what happens next.</p>
+      </div>
+      <div class="cs-pair">
+        <figure class="cs-figure">
+          <button class="cs-figure-open" type="button" data-caption="Quality check failed, with a voice note and photos" aria-label="Enlarge: quality check failed, with a voice note and photos"><span class="cs-figure-frame"><img src="screens/qc-failed.png" alt="Quality check failed screen: a voice note, two photos, and three options: fix it again, order more parts, or close the job" width="360" height="800"></span></button>
+          <figcaption>Quality check failed, with a voice note and photos</figcaption>
+        </figure>
+        <figure class="cs-figure">
+          <button class="cs-figure-open" type="button" data-caption="Closing a job with a reason" aria-label="Enlarge: closing a job with a reason"><span class="cs-figure-frame"><img src="screens/close.png" alt="Close job screen with reason chips, an optional voice or typed note, and a Close Job button" width="360" height="800"></span></button>
+          <figcaption>Closing a job with a reason</figcaption>
+        </figure>
+      </div>
+      <div class="cs-prose">
+        <p>Stuck? The Help button on every job screen calls the manager.</p>
+        <p class="cs-minihead">Test plan</p>
+        <p>Five technicians use the prototype on real jobs. I'd track three things:</p>
+        <ul class="cs-list">
+          <li><span class="cs-label">Fewest updates.</span> Count how many times the technician has to update the app per job. Fewer is better.</li>
+          <li><span class="cs-label">No WhatsApp about parts.</span> Each WhatsApp message about parts is information the app failed to carry.</li>
+          <li><span class="cs-label">Riders feel it's on time.</span> Track how many scooters are ready by the pickup date, and ask riders one question at pickup: was it ready when we said?</li>
+        </ul>
+      </div>
+    </section>
+
+    <p class="cs-aside appear">Thank you for the assignment.</p>
+
+    <footer class="cs-footnotes appear">
+      <ol>
+        <li>This was a two-day design assignment for Blive. I did the research, flows and hi-fi screens.</li>
+        <li>Prices, parts and dates in the screens are placeholders for Blive's real parts list.</li>
+        <li>Sources: <a class="cs-link" href="https://www.businesstoday.in/amp/latest/corporate/story/look-at-the-full-picture-deepinder-goyal-breaks-down-delivery-partner-earnings-with-hard-facts-509252-2026-01-02" target="_blank" rel="noopener noreferrer"><span class="link-label">Business Today</span></a>, <a class="cs-link" href="https://thequint.com/news/india/gig-workers-cab-drivers-delivery-persons-working-conditions-survey-aggregators-apps" target="_blank" rel="noopener noreferrer"><span class="link-label">The Quint</span></a>, <a class="cs-link" href="https://microsoft.com/research/publication/a-meta-analysis-of-the-effects-of-digital-surveillance-of-workers-a-psychology-focused-approach" target="_blank" rel="noopener noreferrer"><span class="link-label">Microsoft Research</span></a>.</li>
+      </ol>
+    </footer>
+  </article>
+</div>
+
+<dialog class="cs-lightbox" id="lightbox" aria-label="Enlarged image">
+  <button type="button" class="cs-lightbox-close" aria-label="Close">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="m3 3 8 8M11 3l-8 8"/></svg>
+  </button>
+  <img src="" alt="">
+  <p></p>
+</dialog>
+
+<script>
+(function () {
+  var root = document.documentElement;
+
+  /* Theme: stored choice first, then the system setting */
+  var theme = 'light';
+  try { theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; } catch (e) {}
+  try { var saved = localStorage.getItem('theme'); if (saved === 'light' || saved === 'dark') theme = saved; } catch (e) {}
+  root.setAttribute('data-theme', theme);
+
+  document.getElementById('theme-toggle').addEventListener('click', function () {
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.classList.add('is-theme-switching');
+    root.setAttribute('data-theme', next);
+    window.setTimeout(function () { root.classList.remove('is-theme-switching'); }, 0);
+    try { localStorage.setItem('theme', next); } catch (e) {}
+  });
+
+  /* Entrance: each .appear element starts 60ms after the one before */
+  Array.prototype.forEach.call(document.querySelectorAll('.appear'), function (el, i) {
+    el.style.setProperty('--appear-delay', (40 + i * 60) + 'ms');
+  });
+
+  /* Contents: the current section is the last one whose top has passed the upper third
+     of the screen. At the top of the page it's always the first section. */
+  var links = Array.prototype.slice.call(document.querySelectorAll('.cs-index-list a'));
+  var sections = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); }).filter(Boolean);
+  function markCurrent() {
+    var screenH = Math.min(window.innerHeight, (window.screen && window.screen.height) || window.innerHeight);
+    var line = screenH * 0.33;
+    var current = sections[0];
+    if (window.scrollY > 8) {
+      sections.forEach(function (s) { if (s.getBoundingClientRect().top <= line) current = s; });
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) current = sections[sections.length - 1];
+    }
+    links.forEach(function (a) {
+      if (a.getAttribute('href') === '#' + current.id) a.setAttribute('aria-current', 'location');
+      else a.removeAttribute('aria-current');
+    });
+  }
+  var ticking = false;
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(function () { ticking = false; markCurrent(); });
+  }, { passive: true });
+  window.addEventListener('resize', markCurrent, { passive: true });
+  markCurrent();
+
+  /* Figures open larger in a native dialog; a click anywhere closes it */
+  var lb = document.getElementById('lightbox');
+  var lbImg = lb.querySelector('img');
+  var lbCap = lb.querySelector('p');
+  Array.prototype.forEach.call(document.querySelectorAll('.cs-figure-open'), function (btn) {
+    btn.addEventListener('click', function () {
+      var img = btn.querySelector('img');
+      lbImg.src = img.getAttribute('src');
+      lbImg.alt = img.alt;
+      lbCap.textContent = btn.getAttribute('data-caption') || '';
+      lb.showModal();
+    });
+  });
+  lb.addEventListener('click', function () { lb.close(); });
+
+  /* Interface sounds, synthesised with Web Audio. Press ticks on any link or button;
+     hover ticks quieter and higher, for a fine mouse only. */
+  var BURST_PRESS = { len: 0.022, decay: 0.0022, freq: 4800, q: 1.4, noise: 0.18, tone: 1900, toneGain: 0.045, toneLen: 0.025, out: 0.42 };
+  var BURST_HOVER = { len: 0.014, decay: 0.0016, freq: 5400, q: 1.8, noise: 0.14, tone: 2600, toneGain: 0.018, toneLen: 0.012, out: 0.38 };
+  var HOVER_GAP_MS = 90;
+  var TARGET = 'a, button';
+  var ctx = null, unlocked = false, hovered = null, lastHover = 0;
+
+  function tick(c, v) {
+    var t = c.currentTime;
+    var out = c.createGain();
+    out.gain.value = v.out;
+    out.connect(c.destination);
+
+    var n = Math.floor(v.len * c.sampleRate);
+    var buf = c.createBuffer(1, n, c.sampleRate);
+    var data = buf.getChannelData(0);
+    var tau = v.decay * c.sampleRate;
+    for (var i = 0; i < n; i++) data[i] = (2 * Math.random() - 1) * Math.exp(-i / tau);
+    var src = c.createBufferSource();
+    src.buffer = buf;
+    var band = c.createBiquadFilter();
+    band.type = 'bandpass';
+    band.frequency.value = v.freq;
+    band.Q.value = v.q;
+    var env = c.createGain();
+    env.gain.setValueAtTime(v.noise, t);
+    env.gain.exponentialRampToValueAtTime(1e-4, t + v.len + 0.006);
+    src.connect(band); band.connect(env); env.connect(out);
+    src.start(t);
+    src.stop(t + v.len + 0.008);
+
+    var osc = c.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = v.tone;
+    var oenv = c.createGain();
+    oenv.gain.setValueAtTime(1e-4, t);
+    oenv.gain.exponentialRampToValueAtTime(v.toneGain, t + 0.001);
+    oenv.gain.exponentialRampToValueAtTime(1e-4, t + v.toneLen);
+    osc.connect(oenv); oenv.connect(out);
+    osc.start(t);
+    osc.stop(t + v.toneLen + 0.005);
+  }
+
+  function audio() {
+    if (ctx) return ctx;
+    var Ctor = window.AudioContext || window.webkitAudioContext;
+    try { ctx = Ctor ? new Ctor() : null; } catch (e) { ctx = null; }
+    return ctx;
+  }
+  function unlock(c) {
+    if (unlocked) return Promise.resolve();
+    unlocked = true;
+    var s = c.createBufferSource();
+    s.buffer = c.createBuffer(1, 1, 22050);
+    s.connect(c.destination);
+    s.start(0);
+    return c.state === 'suspended' ? c.resume().catch(function () {}) : Promise.resolve();
+  }
+  function onFirstGesture() {
+    var c = audio();
+    if (c) unlock(c);
+    window.removeEventListener('pointerdown', onFirstGesture, true);
+    window.removeEventListener('keydown', onFirstGesture, true);
+    window.removeEventListener('touchstart', onFirstGesture, true);
+  }
+  function closestTarget(e) { return e.target && e.target.closest ? e.target.closest(TARGET) : null; }
+
+  window.addEventListener('pointerdown', onFirstGesture, true);
+  window.addEventListener('keydown', onFirstGesture, true);
+  window.addEventListener('touchstart', onFirstGesture, { capture: true, passive: true });
+
+  document.addEventListener('pointerdown', function (e) {
+    if (e.button !== 0 || !closestTarget(e)) return;
+    var c = audio();
+    if (c) {
+      var play = function () { if (c.state === 'running') tick(c, BURST_PRESS); };
+      if (c.state === 'running') play();
+      else Promise.resolve(unlock(c)).then(function () { return c.state === 'suspended' ? c.resume() : undefined; }).then(play).catch(function () {});
+    }
+    if (typeof navigator.vibrate === 'function') navigator.vibrate(8);
+  });
+  document.addEventListener('pointerover', function (e) {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches || e.pointerType !== 'mouse') return;
+    var el = closestTarget(e);
+    if (!el || el === hovered) return;
+    var now = performance.now();
+    var quick = now - lastHover < HOVER_GAP_MS;
+    hovered = el;
+    lastHover = now;
+    if (quick) return;
+    if (ctx && ctx.state === 'running') tick(ctx, BURST_HOVER);
+  });
+  document.addEventListener('pointerout', function (e) {
+    if (closestTarget(e) === hovered) hovered = null;
+  });
+
+  /* Text selection drawn as rounded rectangles */
+  var overlay = null, boxes = [], raf = 0;
+
+  function typing() {
+    var el = document.activeElement;
+    return !!el && (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement ||
+      !!(el.closest && el.closest("[contenteditable]:not([contenteditable='false'])")));
+  }
+  function textNodes(node) {
+    if (node.nodeType === Node.TEXT_NODE) return [node];
+    var out = [];
+    var walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+    for (var n = walker.nextNode(); n; n = walker.nextNode()) out.push(n);
+    return out;
+  }
+  function lineRects(range) {
+    var out = [];
+    textNodes(range.commonAncestorContainer).forEach(function (node) {
+      if (!node.data.trim()) return;
+      var parent = node.parentElement;
+      if (!parent || parent.closest('.selection-highlight-overlay')) return;
+      var style = window.getComputedStyle(parent);
+      if (style.display === 'none' || style.visibility === 'hidden') return;
+      if (!range.intersectsNode(node)) return;
+      var start = range.startContainer === node ? Math.min(range.startOffset, node.length) : 0;
+      var end = range.endContainer === node ? Math.min(range.endOffset, node.length) : node.length;
+      if (start >= end) return;
+      var r = document.createRange();
+      r.setStart(node, start);
+      r.setEnd(node, end);
+      Array.prototype.push.apply(out, Array.prototype.slice.call(r.getClientRects()));
+      r.detach();
+    });
+    return out;
+  }
+  function sameLine(a, b) {
+    var overlap = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+    var shorter = Math.min(a.bottom - a.top, b.bottom - b.top);
+    var gap = Math.max(b.left - a.right, a.left - b.right, 0);
+    return overlap > 0.5 * shorter && gap <= 32;
+  }
+  function measure() {
+    if (typing()) return null;
+    var sel = window.getSelection();
+    if (!sel || sel.isCollapsed) return [];
+    var rects = [];
+    for (var i = 0; i < sel.rangeCount; i++) Array.prototype.push.apply(rects, lineRects(sel.getRangeAt(i)));
+    var vv = window.visualViewport;
+    var width = vv ? vv.width : window.innerWidth;
+    if ((vv && (Math.abs(vv.scale - 1) > 0.01 || Math.abs(vv.offsetLeft) > 0.5)) || window.scrollX > 0.5 ||
+        rects.some(function (r) { return r.left < -2 || r.right > width + 2; })) return null;
+    var ox = window.scrollX + (vv ? vv.offsetLeft : 0);
+    var oy = window.scrollY + (vv ? vv.offsetTop : 0);
+    var maxWidth = width * 0.92;
+    var lines = [];
+    rects.forEach(function (r) {
+      if (r.width <= 0.5 || r.height < 6 || r.height > 80 || r.width > maxWidth) return;
+      var box = { left: r.left + ox, top: r.top + oy, right: r.right + ox, bottom: r.bottom + oy };
+      var hit = lines.find(function (l) { return sameLine(l, box); });
+      if (hit) {
+        hit.left = Math.min(hit.left, box.left);
+        hit.top = Math.min(hit.top, box.top);
+        hit.right = Math.max(hit.right, box.right);
+        hit.bottom = Math.max(hit.bottom, box.bottom);
+      } else lines.push(box);
+    });
+    return lines
+      .sort(function (a, b) { return a.top === b.top ? a.left - b.left : a.top - b.top; })
+      .slice(0, 80)
+      .map(function (l) {
+        var left = Math.max(0, l.left - 3);
+        var top = Math.max(0, l.top - 1);
+        return { left: left, top: top, width: Math.max(0, l.right + 3 - left), height: Math.max(0, l.bottom + 1 - top) };
+      })
+      .filter(function (b) { return b.width > 0.5 && b.height > 0.5; });
+  }
+  function draw(next) {
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.className = 'selection-highlight-overlay';
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(overlay);
+    }
+    overlay.textContent = '';
+    next.forEach(function (b) {
+      var s = document.createElement('span');
+      s.className = 'selection-highlight-rect';
+      s.style.setProperty('--selection-x', b.left.toFixed(2) + 'px');
+      s.style.setProperty('--selection-y', b.top.toFixed(2) + 'px');
+      s.style.width = b.width.toFixed(2) + 'px';
+      s.style.height = b.height.toFixed(2) + 'px';
+      overlay.appendChild(s);
+    });
+    boxes = next;
+  }
+  function updateSelection() {
+    raf = 0;
+    try {
+      var next = measure();
+      if (!next || next.length === 0) {
+        root.classList.remove('has-selection-highlight');
+        if (boxes.length) draw([]);
+        return;
+      }
+      root.classList.add('has-selection-highlight');
+      draw(next);
+    } catch (e) {
+      root.classList.remove('has-selection-highlight');
+      if (boxes.length) draw([]);
+    }
+  }
+  function queueSelection() { if (!raf) raf = window.requestAnimationFrame(updateSelection); }
+  var vv = window.visualViewport;
+  document.addEventListener('selectionchange', queueSelection);
+  document.addEventListener('keyup', queueSelection);
+  document.addEventListener('pointerup', queueSelection);
+  document.addEventListener('touchend', queueSelection);
+  window.addEventListener('resize', queueSelection, { passive: true });
+  window.addEventListener('scroll', queueSelection, { passive: true });
+  if (vv) { vv.addEventListener('resize', queueSelection, { passive: true }); vv.addEventListener('scroll', queueSelection, { passive: true }); }
+})();
+</script>
+
+<script>
+/* Flow diagram whiteboard: pan by dragging, zoom with buttons, pinch, or ⌘/Ctrl + scroll (plain scroll too in full screen). */
+(function () {
+  var canvas = document.getElementById('flow-canvas');
+  var stage = document.getElementById('flow-stage');
+  if (!canvas || !stage) return;
+  var W = 3484, H = 751, MAX = 4;
+  var s = 1, x = 0, y = 0, fitScale = 1;
+  var pointers = new Map(), pinchDist = 0;
+
+  var svg = stage.querySelector('svg');
+  svg.removeAttribute('width');
+  svg.removeAttribute('height');
+  svg.setAttribute('preserveAspectRatio', 'none');
+  // Pan and zoom by moving the SVG's viewBox, so the vector redraws sharp at every zoom level
+  function apply() {
+    var r = canvas.getBoundingClientRect();
+    svg.setAttribute('viewBox', (-x / s) + ' ' + (-y / s) + ' ' + (r.width / s) + ' ' + (r.height / s));
+  }
+  function fit() {
+    var r = canvas.getBoundingClientRect();
+    fitScale = Math.min(r.width / W, r.height / H);
+    s = fitScale;
+    x = (r.width - W * s) / 2;
+    y = (r.height - H * s) / 2;
+    apply();
+  }
+  function zoomAt(factor, cx, cy) {
+    var ns = Math.min(Math.max(s * factor, fitScale * 0.8), MAX);
+    var k = ns / s;
+    x = cx - (cx - x) * k;
+    y = cy - (cy - y) * k;
+    s = ns;
+    apply();
+  }
+  function centre() { var r = canvas.getBoundingClientRect(); return [r.width / 2, r.height / 2]; }
+  function local(e) { var r = canvas.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+
+  canvas.addEventListener('pointerdown', function (e) {
+    if (e.target.closest('button')) return;
+    canvas.setPointerCapture(e.pointerId);
+    pointers.set(e.pointerId, local(e));
+    if (pointers.size === 2) {
+      var p = Array.from(pointers.values());
+      pinchDist = Math.hypot(p[0][0] - p[1][0], p[0][1] - p[1][1]);
+    }
+    canvas.classList.add('is-dragging');
+  });
+  canvas.addEventListener('pointermove', function (e) {
+    if (!pointers.has(e.pointerId)) return;
+    var prev = pointers.get(e.pointerId), now = local(e);
+    pointers.set(e.pointerId, now);
+    if (pointers.size === 1) {
+      x += now[0] - prev[0];
+      y += now[1] - prev[1];
+      apply();
+    } else if (pointers.size === 2) {
+      var p = Array.from(pointers.values());
+      var d = Math.hypot(p[0][0] - p[1][0], p[0][1] - p[1][1]);
+      if (pinchDist) zoomAt(d / pinchDist, (p[0][0] + p[1][0]) / 2, (p[0][1] + p[1][1]) / 2);
+      pinchDist = d;
+    }
+  });
+  function release(e) {
+    pointers.delete(e.pointerId);
+    if (pointers.size < 2) pinchDist = 0;
+    if (!pointers.size) canvas.classList.remove('is-dragging');
+  }
+  canvas.addEventListener('pointerup', release);
+  canvas.addEventListener('pointercancel', release);
+
+  canvas.addEventListener('wheel', function (e) {
+    var full = canvas.classList.contains('is-full');
+    if (!(e.ctrlKey || e.metaKey || full)) return; // plain scroll keeps scrolling the page
+    e.preventDefault();
+    var p = local(e);
+    zoomAt(Math.exp(-e.deltaY * 0.01), p[0], p[1]);
+  }, { passive: false });
+
+  document.getElementById('flow-in').addEventListener('click', function () { var c = centre(); zoomAt(1.25, c[0], c[1]); });
+  document.getElementById('flow-out').addEventListener('click', function () { var c = centre(); zoomAt(0.8, c[0], c[1]); });
+  document.getElementById('flow-fit').addEventListener('click', fit);
+  var fullBtn = document.getElementById('flow-full');
+  var home = canvas.parentNode, homeNext = canvas.nextSibling;
+  function setFull(on) {
+    // Full screen moves the canvas to <body>, since the sections' entrance transform would trap position: fixed
+    if (on) document.body.appendChild(canvas); else home.insertBefore(canvas, homeNext);
+    canvas.classList.toggle('is-full', on);
+    fullBtn.textContent = on ? 'Close' : 'Full screen';
+    document.body.style.overflow = on ? 'hidden' : '';
+    fit();
+  }
+  fullBtn.addEventListener('click', function () { setFull(!canvas.classList.contains('is-full')); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && canvas.classList.contains('is-full')) setFull(false); });
+  window.addEventListener('resize', fit, { passive: true });
+  fit();
+})();
+</script>
+
+</body></html>
